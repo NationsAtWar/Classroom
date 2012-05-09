@@ -1,0 +1,22 @@
+name: Nations
+main: org.nationsatwar.nations.Nations
+version: 0.1
+[depends]: PermissionsBukkit
+
+commands:
+  token:
+    description: Generates a token to link web and minecraft accounts.
+    usage: /token
+    permission: nations.paste.token
+  paste:
+    description: Reloads Paste configuration and attempts resending the cache.
+    usage: /paste
+    permission: nations.paste.admin
+    
+permissions:
+    nations.paste.token:
+        description: Allows access to cookie command.
+        default: true
+    nations.paste.admin:
+        description: Allows access to cookie command.
+        default: op

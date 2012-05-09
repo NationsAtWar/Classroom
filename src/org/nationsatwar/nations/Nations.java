@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Nations extends JavaPlugin {
 	
 	public String getVersion() {
-		return "0.1";
+		return this.getDescription().getVersion();
 	}
 	
 	public void onEnable() {
