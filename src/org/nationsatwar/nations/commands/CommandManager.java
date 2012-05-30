@@ -38,6 +38,10 @@ public class CommandManager {
 			new World(sender, args).run();
 			return true;
 		}
+		if(commandLabel.equalsIgnoreCase("invite")) {
+			new Invite(sender, args).run();
+			return true;
+		}
 		
 		/*if(commandLabel.equalsIgnoreCase("nations")) {
 			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {

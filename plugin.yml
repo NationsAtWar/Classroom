@@ -4,15 +4,19 @@ version: 0.1
 [depends]: PermissionsBukkit
 
 commands:
-  token:
-    description: Generates a token to link web and minecraft accounts.
-    usage: /token
-    permission: nations.paste.token
-  paste:
-    description: Reloads Paste configuration and attempts resending the cache.
-    usage: /paste
-    permission: nations.paste.admin
-    
+  found:
+    description: Creates a nation.
+    usage: /found
+    permission: nations.nations.user
+  world:
+    description: Shows information about the world.
+    usage: /world
+    permission: nations.nations.user
+  invite:
+    description: Invites a player into the nation.
+    usage: /invite [player]
+    permission: nations.nations.user
+
 permissions:
     nations.nations.user:
         description: Flags the user as an accepted nations player.
