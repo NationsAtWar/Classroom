@@ -25,50 +25,34 @@ public class CommandManager {
 
 	//Just like onCommand().
 	public boolean execute(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		Player player = null;
-		ConsoleCommandSender console = null;
-		if(sender instanceof Player) {
-			player = (Player) sender;
-		} else if(sender instanceof ConsoleCommandSender) {
-			console = (ConsoleCommandSender) sender;
-		} else {
+		if(!(sender instanceof Player) && !(sender instanceof ConsoleCommandSender)) {
 			plugin.getLogger().log(Level.WARNING, "CommandSender not console or player.");   
 			return false;
 		}
 		
-		if(commandLabel.equalsIgnoreCase("establish")) {
-			if(player != null) {
-				if(player.hasPermission("nations.establish")) {
-					new Establish(player, args).run();
-					return true;
-				}
-			} else {
-				console.sendMessage("Console can't token.");
-			}
-			return false;
+		if(commandLabel.equalsIgnoreCase("found")) {
+			new Found(sender, args).run();
+			return true;
+		}
+		if(commandLabel.equalsIgnoreCase("world")) {
+			new World(sender, args).run();
+			return true;
 		}
 		
-		if(commandLabel.equalsIgnoreCase("paste")) {
+		/*if(commandLabel.equalsIgnoreCase("nations")) {
 			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-				if(plugin instanceof Paste){
+				if(plugin instanceof Nations){
 					if(player != null) {
 						if(!player.hasPermission("nations.paste.admin")) {
 							player.sendMessage("Sorry, you don't have permissions for that");
 							return false;
 						}
 					}
-					((Paste) plugin).reload(sender);
+					((Nations) plugin).reload(sender);
 				}
 			}
-		}
+		}*/
 		
-		//token gateway if needed.
-		if(player != null) {
-			if(!(PasteAPI.confirmToken(player.getName()))) {
-				player.sendMessage("You do not have access to these commands. Type '/token' to register.");
-				return false;
-			}
-		}
 		/*
 		if (command.length == 0)
 			new Help(commandSender, command).run();

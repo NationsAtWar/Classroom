@@ -14,9 +14,6 @@ commands:
     permission: nations.paste.admin
     
 permissions:
-    nations.paste.token:
-        description: Allows access to cookie command.
+    nations.nations.user:
+        description: Flags the user as an accepted nations player.
         default: true
-    nations.paste.admin:
-        description: Allows access to cookie command.
-        default: op

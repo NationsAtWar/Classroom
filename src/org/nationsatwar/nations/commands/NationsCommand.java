@@ -1,5 +1,7 @@
 package org.nationsatwar.nations.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginBase;
@@ -20,6 +22,86 @@ public abstract class NationsCommand implements Runnable {
 	 */
 	public void helpText(CommandSender commandSender) {
 		commandSender.sendMessage("No help available for:" + command[0]);
+	}
+	
+	/**
+	 * Sends the user the help text for this command.
+	 * @param commandSender The person to message.
+	 */
+	public void helpText(CommandSender commandSender, String example, ArrayList<String> text) {
+		if(text == null || text.isEmpty()) {
+			commandSender.sendMessage("No help available for:" + command[0]);
+		} else {
+			if(command[0] != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+command[0].toUpperCase()+"]=-");
+			}
+			if(example != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.GREEN + example);
+			}
+			for(String t : text){
+				commandSender.sendMessage(ChatColor.YELLOW + t);
+			}
+		}
+	}
+	
+	/**
+	 * Sends the user the help text for this command.
+	 * @param commandSender The person to message.
+	 */
+	public void helpText(CommandSender commandSender, String example, String text) {
+		if(text == null || text.isEmpty()) {
+			commandSender.sendMessage("No help available for:" + command[0]);
+			return;
+		} else {
+			if(command[0] != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+command[0].toUpperCase()+"]=-");
+			}
+			if(example != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.GREEN + example);
+			}
+			if(text != null){
+				commandSender.sendMessage(ChatColor.YELLOW + text);
+			}
+			return;
+		}
+	}
+	
+	/**
+	 * Sends the user the help text for this command.
+	 * @param commandSender The person to message.
+	 */
+	public void errorText(CommandSender commandSender, String err, String info) {
+		if(err != null && info != null) {
+			commandSender.sendMessage(ChatColor.RED + err + " " + ChatColor.YELLOW + info);
+			return;
+		}
+		if(err != null) {
+			commandSender.sendMessage(ChatColor.RED + err);
+			return;
+		}
+		if(info != null) {
+			commandSender.sendMessage(ChatColor.YELLOW + info);
+			return;
+		}
+	}
+	
+	/**
+	 * Sends the user the help text for this command.
+	 * @param commandSender The person to message.
+	 */
+	public void successText(CommandSender commandSender, String completion, String info) {
+		if(completion != null && info != null) {
+			commandSender.sendMessage(ChatColor.GREEN + completion + " " + ChatColor.YELLOW + info);
+			return;
+		}
+		if(completion != null) {
+			commandSender.sendMessage(ChatColor.GREEN + completion);
+			return;
+		}
+		if(info != null) {
+			commandSender.sendMessage(ChatColor.YELLOW + info);
+			return;
+		}
 	}
 	
 	/**

@@ -4,16 +4,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.nationsatwar.nations.managers.NationManager;
+import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
+	public NationManager 	nationManager 	= null;
+	public UserManager		userManager		= null;
 	
 	public String getVersion() {
 		return this.getDescription().getVersion();
 	}
 	
 	public void onEnable() {
-		
 		this.getConfig().options().copyDefaults(true);
+		
+		this.nationManager = new NationManager(this);
+		this.userManager = new UserManager(this);
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
@@ -34,5 +40,9 @@ public class Nations extends JavaPlugin {
 	
 	public void messageAll(String message) {
 		this.getServer().broadcastMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + message);
+	}
+	
+	public void notifyAll(String message) {
+		this.getServer().broadcastMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + ChatColor.DARK_AQUA + message);
 	}
 }

@@ -1,72 +1,78 @@
 package org.nationsatwar.nations.commands;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
+
 public class Found extends NationsCommand {
 
-	double nationPrice = Double.parseDouble(plugin.config.get("nation_price"));
-	
-	public Found(User commandSender, String[] command) {
+	public Found(CommandSender commandSender, String[] command) {
 		super(commandSender, command);
 	} // Found()
 	
 	@Override
 	public void run() {
+		//double nationPrice = plugin.getConfig().getDouble("nation_price");
+		
 		
 		// -found || found help
 		if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
-			commandSender.message(Color.DarkRed() + "[Nations at War]" + Color.DarkAqua() + " -=[FOUND]=-");
-			commandSender.message(Color.DarkRed() + "[Nations at War]" + Color.Green() + " i.e. '/naw found [nation name]'");
-			commandSender.message(Color.Yellow() + "Establishes a nation for you to dick around with.");
+			this.helpText(commandSender, "i.e. '/found [nation] [nation name]", "Forms a nation.");
 			return;
 		}
 		
-		MethodAccount userWallet = commandSender.getAccount();
-		
-		String nationName = this.connectStrings(command, 1, command.length);
-		
-		if (nationName.length() > 30) {
-			commandSender.message(Color.Red() + "Name too long: " + Color.Yellow() + "Nation names can only be 32 characters long. " +
-					"Blame iConomy.");
-			return;
-		}
-		
-		int aposAmount = 0;
-		for (int i=0; i<nationName.length(); i++) {
-			if (nationName.charAt(i) == '\'')
-				aposAmount += 1;
-			if (!Character.isLetterOrDigit(nationName.charAt(i)) && nationName.charAt(i) != ' ' && nationName.charAt(i) != '\'') {
-				commandSender.message(Color.Red() + "Invalid Nation Name: " + Color.Yellow() + "Letters or numbers only.");
+		// -found nation
+		if(command[1].equalsIgnoreCase("nation")) {
+			String nationName = this.connectStrings(command, 1, command.length);
+			
+			if (nationName.length() > 30) {
+				this.errorText(commandSender, "Name too long:", "Nation names can only be 32 characters long. Blame iConomy.");
 				return;
 			}
-		}
-		
-		if (aposAmount > 1) {
-			commandSender.message(Color.Red() + "Too many apostrophes: " + Color.Yellow() + ":/");
-			return;
-		}
-		
-		if (!plugin.nationManager.exists(nationName)) {
 			
-			if (!plugin.userManager.isInNation(commandSender.getName())) {
-				if (userWallet.balance() >= nationPrice) {
-					userWallet.subtract(nationPrice);
-					plugin.nationManager.foundNation(commandSender, nationName);
-					plugin.messageAll(Color.Aqua() + "The Nation of '" + nationName + "' has been founded!");
-					return;
-				} else {
-					commandSender.message(Color.Red() + "Insufficient funds: " + Color.Yellow() + "You need $" + 
-							(nationPrice - userWallet.balance()) + " more to afford a new nation.");
+			int aposAmount = 0;
+			for (int i=0; i<nationName.length(); i++) {
+				if (nationName.charAt(i) == '\'')
+					aposAmount += 1;
+				if (!Character.isLetterOrDigit(nationName.charAt(i)) && nationName.charAt(i) != ' ' && nationName.charAt(i) != '\'') {
+					this.errorText(commandSender, "Invalid Nation Name:", "Letters or numbers only.");
 					return;
 				}
-			} else {
-				commandSender.message(Color.Yellow() + "You are already a member of a nation. You must leave that nation " +
-						"before you can found a new one!");
+			}
+			
+			if (aposAmount > 1) {
+				this.errorText(commandSender, "Too many apostrophes:", ":/");
 				return;
 			}
+			
+			if(!(plugin instanceof Nations)) {
+				return;
+			}
+			Nations nations = (Nations) plugin;
+			
+			if (!nations.nationManager.exists(nationName)) {
+				if (!nations.userManager.isInNation(commandSender.getName())) {
+						Nation nation = new Nation();
+						nation.setName(nationName);
+						if(commandSender instanceof Player) {
+							nation.addFounder(commandSender.getName());
+						}
+						if(nations.nationManager.addNation(nation)) {
+							nations.notifyAll(nationName + " created!");
+						} else {
+							this.errorText(commandSender, "Couldn't create nation.", null);
+						}
+				} else {
+					this.errorText(commandSender, null, "You are already a member of a nation. You must leave that nation " +
+							"before you can found a new one!");
+					return;
+				}
+			}
+			else {
+				this.errorText(commandSender, "A Nation with that name already exists!", null);
+				return;
+			}	
 		}
-		
-		else {
-			commandSender.message("A Nation with that name already exists!");
-			return;
-		}	
 	}
 }
