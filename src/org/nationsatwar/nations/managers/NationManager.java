@@ -14,6 +14,9 @@ public class NationManager extends NationsManagement {
 	}
 
 	public boolean exists(String nationName) {
+		if(nationMap.isEmpty()) {
+			return false;
+		}
 		return nationMap.containsKey(nationName);
 	}
 

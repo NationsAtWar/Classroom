@@ -37,7 +37,7 @@ public class World extends NationsCommand {
 			return;
 		}
 		int nationAmount = nationList.size();
-		int pageAmount = (int) (nationAmount / 10) + 1;
+		int pageAmount = ((int) (nationAmount / 10)) + 1;
 		
 		if(pageNumber > pageAmount) {
 			pageNumber = pageAmount;
@@ -46,11 +46,9 @@ public class World extends NationsCommand {
 		this.successText(commandSender, "Page " + pageNumber + " of " + pageAmount, null);
 		
 		int nationNumber = (pageNumber - 1)*10;
-		while(nationNumber<nationNumber + 10) {
+		int initialNationNumber = nationNumber;
+		while(nationNumber<initialNationNumber + 10 && nationNumber < nationList.size()) {
 			String nationName = nationList.get(nationNumber);
-			if(nationName == null) {
-				break;
-			}
 			this.successText(commandSender, null, nationName);
 			nationNumber++;
 		}

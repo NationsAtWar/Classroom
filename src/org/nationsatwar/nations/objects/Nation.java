@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Nation extends NationsObject {
 	private String name;
-	private ArrayList<String> founders;
+	private ArrayList<String> founders = new ArrayList<String>();
 
 	public Nation() {
 		super();

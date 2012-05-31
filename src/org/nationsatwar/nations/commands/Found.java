@@ -23,6 +23,11 @@ public class Found extends NationsCommand {
 		
 		// -found nation
 		if(command[0].equalsIgnoreCase("nation")) {
+			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/found [nation] [nation name]", "Forms a nation.");
+				return;
+			}
+			
 			String nationName = this.connectStrings(command, 1, command.length);
 			
 			if (nationName.length() > 30) {
@@ -50,13 +55,16 @@ public class Found extends NationsCommand {
 			}
 			Nations nations = (Nations) plugin;
 			
-			if (!nations.nationManager.exists(nationName)) {
-				if (!nations.userManager.isInNation(commandSender.getName())) {
+			if(!nations.nationManager.exists(nationName)) {
+				if(!nations.userManager.isInNation(commandSender.getName())) {
+					
 						Nation nation = new Nation();
 						nation.setName(nationName);
 						if(commandSender instanceof Player) {
 							nation.addFounder(commandSender.getName());
 						}
+						plugin.getLogger().info("creating nation: "+nation.getName());
+						
 						if(nations.nationManager.addNation(nation)) {
 							nations.notifyAll(nationName + " created!");
 						} else {
@@ -67,8 +75,7 @@ public class Found extends NationsCommand {
 							"before you can found a new one!");
 					return;
 				}
-			}
-			else {
+			} else {
 				this.errorText(commandSender, "A Nation with that name already exists!", null);
 				return;
 			}	

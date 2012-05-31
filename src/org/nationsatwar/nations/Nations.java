@@ -9,8 +9,8 @@ import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
-	public NationManager 	nationManager 	= null;
-	public UserManager		userManager		= null;
+	public NationManager 	nationManager 	= new NationManager(this);
+	public UserManager		userManager		= new UserManager(this);
 	
 	public CommandManager	command			= new CommandManager(this);
 	
@@ -20,9 +20,6 @@ public class Nations extends JavaPlugin {
 	
 	public void onEnable() {
 		this.getConfig().options().copyDefaults(true);
-		
-		this.nationManager = new NationManager(this);
-		this.userManager = new UserManager(this);
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
