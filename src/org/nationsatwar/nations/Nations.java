@@ -4,12 +4,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.nationsatwar.nations.commands.CommandManager;
 import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
 	public NationManager 	nationManager 	= null;
 	public UserManager		userManager		= null;
+	
+	public CommandManager	command			= new CommandManager(this);
 	
 	public String getVersion() {
 		return this.getDescription().getVersion();
@@ -35,7 +38,7 @@ public class Nations extends JavaPlugin {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
-		return false; //command.execute(sender, cmd, commandLabel, args);
+		return command.execute(sender, cmd, commandLabel, args);
 	}
 	
 	public void messageAll(String message) {

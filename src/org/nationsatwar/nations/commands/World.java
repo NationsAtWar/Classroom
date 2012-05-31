@@ -7,14 +7,14 @@ import org.nationsatwar.nations.Nations;
 
 public class World extends NationsCommand {
 
-	protected World(CommandSender commandSender, String[] command) {
-		super(commandSender, command);
+	protected World(CommandSender commandSender, String commandLabel, String[] command) {
+		super(commandSender, commandLabel, command);
 	}
 
 	@Override
 	public void run() {
 		
-		if(command.length == 1 && command[1].equalsIgnoreCase("help")) {
+		if(command.length > 0 && command[0].equalsIgnoreCase("help")) {
 			this.helpText(commandSender, null, "Shows you a list of nations in the world.");
 			return;
 		}
@@ -22,7 +22,7 @@ public class World extends NationsCommand {
 		this.successText(commandSender, "["+plugin.getName() + "] Current Nations", null);
 		
 		int pageNumber = 1;
-		if(command.length > 1) {
+		if(command.length > 0) {
 			pageNumber = Integer.parseInt(command[1]);
 		}
 		
@@ -32,6 +32,10 @@ public class World extends NationsCommand {
 		Nations nations = (Nations) plugin;
 		
 		ArrayList<String> nationList = nations.nationManager.getNationList();
+		if(nationList == null || nationList.size() < 1) {
+			this.errorText(commandSender, null, "No nations yet.");
+			return;
+		}
 		int nationAmount = nationList.size();
 		int pageAmount = (int) (nationAmount / 10) + 1;
 		
@@ -43,7 +47,11 @@ public class World extends NationsCommand {
 		
 		int nationNumber = (pageNumber - 1)*10;
 		while(nationNumber<nationNumber + 10) {
-			this.successText(commandSender, null, nationList.get(nationNumber));
+			String nationName = nationList.get(nationNumber);
+			if(nationName == null) {
+				break;
+			}
+			this.successText(commandSender, null, nationName);
 			nationNumber++;
 		}
 	}

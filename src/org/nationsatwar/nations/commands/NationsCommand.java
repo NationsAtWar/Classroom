@@ -10,8 +10,9 @@ public abstract class NationsCommand implements Runnable {
 	protected static PluginBase plugin;
 	protected CommandSender commandSender;
 	protected String[] command;
+	protected String commandLabel;
 	
-	protected NationsCommand(CommandSender commandSender, String[] command) {
+	protected NationsCommand(CommandSender commandSender, String commandLabel, String[] command) {
 		this.commandSender = commandSender;
 		this.command = command;
 	}
@@ -21,7 +22,7 @@ public abstract class NationsCommand implements Runnable {
 	 * @param commandSender The person to message.
 	 */
 	public void helpText(CommandSender commandSender) {
-		commandSender.sendMessage("No help available for:" + command[0]);
+		commandSender.sendMessage("No help available for:" + this.commandLabel);
 	}
 	
 	/**
@@ -30,10 +31,10 @@ public abstract class NationsCommand implements Runnable {
 	 */
 	public void helpText(CommandSender commandSender, String example, ArrayList<String> text) {
 		if(text == null || text.isEmpty()) {
-			commandSender.sendMessage("No help available for:" + command[0]);
+			commandSender.sendMessage("No help available for:" + this.commandLabel);
 		} else {
-			if(command[0] != null) {
-				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+command[0].toUpperCase()+"]=-");
+			if(this.commandLabel != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+this.commandLabel.toUpperCase()+"]=-");
 			}
 			if(example != null) {
 				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.GREEN + example);
@@ -50,11 +51,11 @@ public abstract class NationsCommand implements Runnable {
 	 */
 	public void helpText(CommandSender commandSender, String example, String text) {
 		if(text == null || text.isEmpty()) {
-			commandSender.sendMessage("No help available for:" + command[0]);
+			commandSender.sendMessage("No help available for:" + commandLabel);
 			return;
 		} else {
-			if(command[0] != null) {
-				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+command[0].toUpperCase()+"]=-");
+			if(this.commandLabel != null) {
+				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.DARK_AQUA + " -=["+commandLabel.toUpperCase()+"]=-");
 			}
 			if(example != null) {
 				commandSender.sendMessage(ChatColor.DARK_RED + "["+plugin.getName()+"] " + ChatColor.GREEN + example);
@@ -110,7 +111,7 @@ public abstract class NationsCommand implements Runnable {
 	 */
 	public boolean hasAccess(CommandSender commandSender, boolean permission) {
 		if (!permission) {
-			commandSender.sendMessage(ChatColor.RED + "Permission denied.");
+			commandSender.sendMessage(ChatColor.RED + commandLabel + ": Permission denied.");
 			return false;
 		}
 		return true;

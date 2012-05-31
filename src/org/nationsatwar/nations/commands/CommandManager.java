@@ -31,15 +31,15 @@ public class CommandManager {
 		}
 		
 		if(commandLabel.equalsIgnoreCase("found")) {
-			new Found(sender, args).run();
+			new Found(sender, commandLabel, args).run();
 			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("world")) {
-			new World(sender, args).run();
+			new World(sender, commandLabel, args).run();
 			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("invite")) {
-			new Invite(sender, args).run();
+			new Invite(sender, commandLabel, args).run();
 			return true;
 		}
 		

@@ -5,15 +5,15 @@ import org.nationsatwar.nations.Nations;
 
 public class Invite extends NationsCommand {
 
-	protected Invite(CommandSender commandSender, String[] command) {
-		super(commandSender, command);
+	protected Invite(CommandSender commandSender, String commandLabel, String[] command) {
+		super(commandSender, commandLabel, command);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void run() {
 		// --invite || -invite help
-		if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
+		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
 			this.helpText(commandSender, "e.g. '/naw invite player'", "Invites player to join your nation. Nation permission may apply.");
 			return;
 		}
@@ -24,7 +24,7 @@ public class Invite extends NationsCommand {
 		Nations nations = (Nations) plugin;
 		
 		// -invite [String: userName]
-		if(!nations.userManager.exists(command[1])) {
+		if(!nations.userManager.exists(command[0])) {
 			this.errorText(commandSender, "That user does not exist or is not registered!", null);
 			return;
 		}

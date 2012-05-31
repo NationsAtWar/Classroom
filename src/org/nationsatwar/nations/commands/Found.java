@@ -7,23 +7,22 @@ import org.nationsatwar.nations.objects.Nation;
 
 public class Found extends NationsCommand {
 
-	public Found(CommandSender commandSender, String[] command) {
-		super(commandSender, command);
+	public Found(CommandSender commandSender, String commandLabel, String[] command) {
+		super(commandSender, commandLabel, command);
 	} // Found()
 	
 	@Override
 	public void run() {
 		//double nationPrice = plugin.getConfig().getDouble("nation_price");
 		
-		
 		// -found || found help
-		if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
+		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
 			this.helpText(commandSender, "i.e. '/found [nation] [nation name]", "Forms a nation.");
 			return;
 		}
 		
 		// -found nation
-		if(command[1].equalsIgnoreCase("nation")) {
+		if(command[0].equalsIgnoreCase("nation")) {
 			String nationName = this.connectStrings(command, 1, command.length);
 			
 			if (nationName.length() > 30) {
