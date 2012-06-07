@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.plugin.PluginBase;
+import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
+import org.nationsatwar.nations.objects.User;
 
 public class NationManager extends NationsManagement {
 	private HashMap<String, Nation> nationMap = new HashMap<String, Nation>();
@@ -31,6 +33,19 @@ public class NationManager extends NationsManagement {
 
 	public ArrayList<String> getNationList() {
 		return new ArrayList<String>(nationMap.keySet());
+	}
+
+	public boolean addFounder(String name) {
+		if(plugin instanceof Nations) {
+			User user = ((Nations) plugin).userManager.getUserByName(name);
+			if(user == null) {
+				return false;
+			}
+			if(user.setRankType(User.RankType.FOUNDER)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

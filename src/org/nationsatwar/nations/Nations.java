@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.nationsatwar.listeners.NationsUserListener;
 import org.nationsatwar.nations.commands.CommandManager;
 import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.UserManager;
@@ -19,6 +20,7 @@ public class Nations extends JavaPlugin {
 	}
 	
 	public void onEnable() {
+		new NationsUserListener(this);
 		this.getConfig().options().copyDefaults(true);
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");

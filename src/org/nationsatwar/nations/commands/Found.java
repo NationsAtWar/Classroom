@@ -60,10 +60,12 @@ public class Found extends NationsCommand {
 					
 						Nation nation = new Nation();
 						nation.setName(nationName);
+
 						if(commandSender instanceof Player) {
-							nation.addFounder(commandSender.getName());
+							if(nations.nationManager.addFounder(commandSender.getName())) {
+								this.successText(commandSender, null, "Added you as a founder of "+nation.getName());
+							}
 						}
-						plugin.getLogger().info("creating nation: "+nation.getName());
 						
 						if(nations.nationManager.addNation(nation)) {
 							nations.notifyAll(nationName + " created!");
