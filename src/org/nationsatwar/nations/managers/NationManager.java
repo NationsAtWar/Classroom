@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
+import org.nationsatwar.nations.objects.Rank.RankType;
 import org.nationsatwar.nations.objects.User;
 
 public class NationManager extends NationsManagement {
@@ -41,7 +42,7 @@ public class NationManager extends NationsManagement {
 			if(user == null) {
 				return false;
 			}
-			if(user.setRankType(User.RankType.FOUNDER)) {
+			if(user.setRankType(RankType.FOUNDER)) {
 				return true;
 			}
 		}

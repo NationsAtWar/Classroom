@@ -1,5 +1,7 @@
 package org.nationsatwar.nations.objects;
 
+import org.nationsatwar.nations.objects.Rank.RankType;
+
 public class User extends NationsObject {
 	private String name;
 	private String rank;
@@ -30,9 +32,5 @@ public class User extends NationsObject {
 	
 	public String getNation() {
 		return this.nation;
-	}
-	
-	public enum RankType {
-		FOUNDER, RECRUIT, CUSTOM;
 	}
 }
