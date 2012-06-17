@@ -13,7 +13,15 @@ commands:
     usage: /world
     permission: nations.nations.user
   invite:
-    description: Invites a player into the nation.
+    description: Creates invitations.
+    usage: /invite [player]
+    permission: nations.nations.user
+  accept:
+    description: Accepts invitations.
+    usage: /invite [player]
+    permission: nations.nations.user
+  claim:
+    description: Claims land for your nation.
     usage: /invite [player]
     permission: nations.nations.user
 
