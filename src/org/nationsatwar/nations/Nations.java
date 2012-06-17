@@ -6,12 +6,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.nationsatwar.listeners.NationsUserListener;
 import org.nationsatwar.nations.commands.CommandManager;
+import org.nationsatwar.nations.managers.InviteManager;
 import org.nationsatwar.nations.managers.NationManager;
+import org.nationsatwar.nations.managers.PlotManager;
+import org.nationsatwar.nations.managers.TownManager;
 import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
 	public NationManager 	nationManager 	= new NationManager(this);
+	public TownManager		townManager		= new TownManager(this);
+	public PlotManager		plotManager		= new PlotManager(this);
 	public UserManager		userManager		= new UserManager(this);
+	public InviteManager	inviteManager	= new InviteManager(this);
 	
 	public CommandManager	command			= new CommandManager(this);
 	

@@ -39,7 +39,15 @@ public class CommandManager {
 			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("invite")) {
-			new Invite(sender, commandLabel, args).run();
+			new InviteCommand(sender, commandLabel, args).run();
+			return true;
+		}
+		if(commandLabel.equalsIgnoreCase("claim")) {
+			new Claim(sender, commandLabel, args).run();
+			return true;
+		}
+		if(commandLabel.equalsIgnoreCase("accept")) {
+			new Accept(sender, commandLabel, args).run();
 			return true;
 		}
 		

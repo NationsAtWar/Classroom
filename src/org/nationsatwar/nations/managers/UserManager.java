@@ -13,15 +13,6 @@ public class UserManager extends NationsManagement {
 		super(plugin);
 	}
 
-	public boolean isInNation(String name) {
-		if(userMap.containsKey(name)) {
-			if(userMap.get(name).getNation() != null) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public boolean exists(String string) {
 		if(userMap.isEmpty()) {
 			return false;
