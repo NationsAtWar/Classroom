@@ -58,7 +58,7 @@ public class Found extends NationsCommand {
 			Nations nations = (Nations) plugin;
 			
 			if(!nations.nationManager.exists(nationName)) {
-				if(nations.nationManager.getNationByUsername(commandSender.getName()) != null) {
+				if(nations.nationManager.getNationByUsername(commandSender.getName()) == null) {
 					
 						Nation nation = new Nation();
 						nation.setName(nationName);
