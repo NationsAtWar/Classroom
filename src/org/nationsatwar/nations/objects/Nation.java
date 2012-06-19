@@ -7,9 +7,9 @@ import org.nationsatwar.nations.objects.Rank.RankType;
 
 public class Nation extends NationsObject {
 	private String name;
-	private ArrayList<Rank> ranks;
-	private HashMap<String, Rank> members;
-	private ArrayList<Town> towns;
+	private ArrayList<Rank> ranks = new ArrayList<Rank>();
+	private HashMap<String, Rank> members = new HashMap<String,Rank>();
+	private ArrayList<Town> towns = new ArrayList<Town>();
 	
 	public Nation() {
 		super();
