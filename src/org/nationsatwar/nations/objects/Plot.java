@@ -7,15 +7,8 @@ public class Plot extends NationsObject {
 	public int x;
 	public int z;
 	
-	public Plot(String world, int x, int z) {
-		super();
-		this.x = x;
-		this.z = z;
-		this.world = world;
-	}
-
-	public Plot(Location location) {
-		super();
+	public Plot(int newId, Location location) {
+		super(newId);
 		this.x = location.getChunk().getX();
 		this.z = location.getChunk().getZ();
 		this.world = location.getWorld().getName();

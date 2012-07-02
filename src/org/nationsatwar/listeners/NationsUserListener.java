@@ -25,14 +25,13 @@ public class NationsUserListener implements Listener {
 		}
 		Nations nations = (Nations) plugin;
 		Player player = event.getPlayer();
-		if(nations.userManager.getUserByName(player.getName()) != null) {
-			
-		} else {
+		if(!nations.userManager.getUserList().contains(player.getName())) {
 			if(player.hasPermission("nationsatwar.nations.player")) {
-				User user = new User();
-				user.setName(player.getName());
-				if(nations.userManager.addUser(user)) {
-					nations.getLogger().log(Level.FINE, "Added user: " + player.getName());
+				User user = nations.userManager.getUserByPlayer(player);
+				if(user == null) {
+					if(nations.userManager.createUser(player.getName())) {
+						nations.getLogger().log(Level.FINE, "Added user: " + player.getName());
+					}
 				}
 			}
 		}

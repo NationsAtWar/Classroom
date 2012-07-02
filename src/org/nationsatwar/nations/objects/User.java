@@ -3,8 +3,9 @@ package org.nationsatwar.nations.objects;
 public class User extends NationsObject {
 	private String name;
 	
-	public User() {
-		super();
+	public User(int newId, String name) {
+		super(newId);
+		this.name = name;
 	}
 	
 	public boolean setName(String playerName) {

@@ -2,7 +2,6 @@ package org.nationsatwar.nations.commands;
 
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
-import org.nationsatwar.nations.objects.Invite;
 import org.nationsatwar.nations.objects.Invite.InviteType;
 import org.nationsatwar.nations.objects.User;
 
@@ -31,16 +30,16 @@ public class InviteCommand extends NationsCommand {
 				return;
 			}
 			// -invite [String: userName]
-			if(!nations.userManager.exists(command[1])) {
+			
+			User inviter = user;
+			User invitee = nations.userManager.findUser(command[1]);
+			
+			if(invitee == null) {
 				this.errorText(commandSender, "That user does not exist or is not registered!", null);
 				return;
 			}
 			
-			User inviter = nations.userManager.getUserByName(commandSender.getName());
-			User invitee = nations.userManager.getUserByName(command[1]);
-			
-			Invite newInvite = new Invite(InviteType.PLAYERNATION, inviter, invitee);
-			if(nations.inviteManager.addInvite(newInvite)) {
+			if(nations.inviteManager.createInvite(InviteType.PLAYERNATION, inviter, invitee)) {
 				this.successText(commandSender, "Invite Sent.", null);
 			}
 			

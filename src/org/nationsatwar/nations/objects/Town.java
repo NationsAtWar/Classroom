@@ -3,18 +3,15 @@ package org.nationsatwar.nations.objects;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.nationsatwar.nations.objects.Rank.RankType;
-
 public class Town extends NationsObject {
 	private String name;
-	private ArrayList<Plot> plots = new ArrayList<Plot>();
-	private HashMap<String, Rank> members = new HashMap<String, Rank>();
-	private ArrayList<Rank> ranks = new ArrayList<Rank>();
+	private ArrayList<Integer> plots = new ArrayList<Integer>();
+	private HashMap<Integer, Integer> members = new HashMap<Integer, Integer>();
+	private ArrayList<Integer> customRanks = new ArrayList<Integer>();
 	
-	public Town() {
-		super();
-		this.ranks.add(new Rank("Founder",RankType.FOUNDER));
-		this.ranks.add(new Rank("Recruit",RankType.RECRUIT));
+	public Town(int newID, String name) {
+		super(newID);
+		this.name = name;
 	}
 
 	public String getName() {
@@ -26,45 +23,49 @@ public class Town extends NationsObject {
 	}
 	
 	public boolean addPlot(Plot plot) {
-		if(!this.plots.contains(plot)) {
-			this.plots.add(plot);
+		if(!this.plots.contains(plot.getID())) {
+			this.plots.add(plot.getID());
 			return true;
 		}
 		return false;
 	}
 
-	public ArrayList<String> getMembers() {
-		ArrayList<String> membs = new ArrayList<String>(this.members.keySet());
+	public ArrayList<Integer> getMembers(Rank rank) {
+		if(rank == null) {
+			return new ArrayList<Integer>(this.members.keySet());
+		}
+		ArrayList<Integer> membs = new ArrayList<Integer>();
+		for(int a : this.members.keySet()) {
+			if(this.members.get(a) == rank.getID()) {
+				membs.add(a);
+			}
+		}
 		return membs;
 	}
 
-	public ArrayList<Rank> getRanks(RankType type) {
-		if(type == null) {
-			return this.ranks;
-		}
-		ArrayList<Rank> list = new ArrayList<Rank>();
-		for(Rank rank : this.ranks) {
-			if(rank.type == type) {
-				list.add(rank);
-			}
-		}
-		return list;
+	public ArrayList<Integer> getRanks() {
+		return this.customRanks;
 	}
 
-	public boolean setRank(String playername, Rank rank) {
-		if(this.ranks.contains(rank)) {
-			this.members.put(playername, rank);
+	public boolean setRank(User user, Rank rank) {
+		if(this.members.containsKey(user.getID())) {
+			this.members.put(user.getID(), rank.getID());
 			return true;
 		}
 		return false;
 	}
 
 	public boolean removeMember(User user) {
-		if(this.members.containsKey(user.getName())) {
-			Rank rank = this.members.remove(user.getName());
-			if(rank.type == RankType.FOUNDER) {
-				//TODO: stuff for handling founder roles.
-			}
+		if(this.members.containsKey(user.getID())) {
+			this.members.remove(user.getID());
+			return true;
+		}
+		return false;
+	}
+
+	public boolean addMember(User user, Rank rank) {
+		if(!this.members.containsKey(user.getID())) {
+			this.members.put(user.getID(), rank.getID());
 			return true;
 		}
 		return false;

@@ -1,11 +1,12 @@
 package org.nationsatwar.nations.objects;
 
-public class Invite {
+public class Invite extends NationsObject {
 	private InviteType type;
-	private Object invitee;
-	private Object inviter;
+	private Integer invitee;
+	private Integer inviter;
 	
-	public Invite(InviteType newType, Object newInviter, Object newInvitee) {
+	public Invite(int newId, InviteType newType, int newInviter, int newInvitee) {
+		super(newId);
 		this.type = newType;
 		
 		if(newType == InviteType.PLAYERNATION) {
@@ -18,8 +19,12 @@ public class Invite {
 		PLAYERNATION,NATIONALLIANCE,TOWNNATION,
 	}
 
-	public Object getInvitee() {
+	public int getInvitee() {
 		return invitee;
+	}
+	
+	public InviteType getType() {
+		return this.type;
 	}
 
 	public String getNiceType() {
@@ -29,7 +34,7 @@ public class Invite {
 		return null;
 	}
 
-	public Object getInviter() {
+	public int getInviter() {
 		return inviter;
 	}
 

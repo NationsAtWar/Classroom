@@ -1,7 +1,6 @@
 package org.nationsatwar.nations.commands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.Plot;
@@ -57,28 +56,27 @@ public class Found extends NationsCommand {
 			}
 			Nations nations = (Nations) plugin;
 			
-			if(!nations.nationManager.exists(nationName)) {
-				if(nations.nationManager.getNationByUsername(commandSender.getName()) == null) {
-					
-						Nation nation = new Nation();
-						nation.setName(nationName);
-
-						if(commandSender instanceof Player) {
-							if(nations.nationManager.addFounder(nation, commandSender.getName())) {
-								this.successText(commandSender, null, "Added you as a founder of "+nation.getName());
-							}
-						}
-						
-						if(nations.nationManager.addNation(nation)) {
-							nations.notifyAll(nationName + " created!");
-						} else {
-							this.errorText(commandSender, "Couldn't create nation.", null);
-						}
+			if(!nations.nationManager.getNationList().contains(nationName)) {
+				if(user != null) {
+					if(nations.nationManager.getNationByUserID(user.getID()) != null) {
+						this.errorText(commandSender, null, "You are already a member of a nation. You must leave that nation " +
+								"before you can found a new one!");
+						return;						
+					}
+				}
+				Nation nation = nations.nationManager.createNation(nationName);
+				if(nation != null) {
+					nations.notifyAll(nationName + " created!");
 				} else {
-					this.errorText(commandSender, null, "You are already a member of a nation. You must leave that nation " +
-							"before you can found a new one!");
+					this.errorText(commandSender, "Couldn't create nation.", null);
 					return;
 				}
+				if(user != null) {
+					if(nation.addMember(user, nations.rankManager.getFounderRank())) {
+						this.successText(commandSender, null, "Added you as a founder of "+nation.getName());
+					}
+				}
+				return;
 			} else {
 				this.errorText(commandSender, "A Nation with that name already exists!", null);
 				return;
@@ -117,31 +115,45 @@ public class Found extends NationsCommand {
 				return;
 			}
 			Nations nations = (Nations) plugin;
-			Nation nation = nations.nationManager.getNationByUsername(commandSender.getName());
 			
-			if(!nations.townManager.exists(townName)) {
+			if(user == null) {
+				this.errorText(commandSender, "Sorry, console can't claim.", null);
+				return;
+			}
+			
+			Nation nation = nations.nationManager.getNationByUserID(user.getID());
+			
+			if(!nations.townManager.getTownList().contains(townName))  {
 				if(nation != null) {
-					if(nations.townManager.getTownByUsername(commandSender.getName()) == null) {
+					if(nations.townManager.getTownByUserID(user.getID()) == null) {
 					
-						Town town = new Town();
-						town.setName(townName);
-
-						if(commandSender instanceof Player) {
-							if(nations.townManager.addFounder(town, commandSender.getName())) {
+						Town town = nations.townManager.createTown(townName);
+						if(town == null ) {
+							this.errorText(commandSender, "Couldn't create town.", null);
+							return;
+						} else {
+							nations.notifyAll(townName + " created!");
+						}
+						if(user != null) {							
+							if(town.addMember(user, nations.rankManager.getFounderRank())) {
 								this.successText(commandSender, null, "Added you as a founder of "+town.getName());
 							}
-							Plot plot = new Plot(((Player) commandSender).getLocation());
-							if(nations.plotManager.addPlot(plot) && nations.townManager.addPlotToTown(plot, town)) {
-								nations.plotManager.showBoundaries(plot);
-								this.successText(commandSender, null, "You now own this plot.");
+							
+							Plot plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation());
+							if(plot == null) {
+								this.errorText(commandSender, "Couldn't create plot.", null);
 							}
+							
+							if(!town.addPlot(plot)) {
+								this.errorText(commandSender, "Error assigning plot to town.", null);
+							}
+							if(!nation.addTown(town)) {
+								this.errorText(commandSender, "Error assigning town to nation.", null);
+							}
+							nations.plotManager.showBoundaries(plot);
+							this.successText(commandSender, null, "You now own this plot.");
 						}
-						
-						if(nations.townManager.addTown(town) && nations.nationManager.addTownToNation(town, nation)) {
-							nations.notifyAll(townName + " created!");
-						} else {
-							this.errorText(commandSender, "Couldn't create town.", null);
-						}
+						return;
 					} else {
 						this.errorText(commandSender, null, "You are already a member of a town. You must leave that town to form a new one.");
 						return;						

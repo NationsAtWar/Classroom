@@ -6,18 +6,23 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.nationsatwar.listeners.NationsUserListener;
 import org.nationsatwar.nations.commands.CommandManager;
+import org.nationsatwar.nations.datasource.DataSource;
 import org.nationsatwar.nations.managers.InviteManager;
 import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.PlotManager;
+import org.nationsatwar.nations.managers.RankManager;
 import org.nationsatwar.nations.managers.TownManager;
 import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
+	public DataSource database = DataSource.getDatabase(this);
+
 	public NationManager 	nationManager 	= new NationManager(this);
 	public TownManager		townManager		= new TownManager(this);
 	public PlotManager		plotManager		= new PlotManager(this);
 	public UserManager		userManager		= new UserManager(this);
 	public InviteManager	inviteManager	= new InviteManager(this);
+	public RankManager		rankManager		= new RankManager(this);
 	
 	public CommandManager	command			= new CommandManager(this);
 	
@@ -26,8 +31,16 @@ public class Nations extends JavaPlugin {
 	}
 	
 	public void onEnable() {
+		
 		new NationsUserListener(this);
 		this.getConfig().options().copyDefaults(true);
+		
+		plotManager.loadAll();
+		nationManager.loadAll();
+		townManager.loadAll();
+		rankManager.loadAll();
+		inviteManager.loadAll();
+		userManager.loadAll();
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
@@ -35,6 +48,15 @@ public class Nations extends JavaPlugin {
 	
 	public void onDisable() {
 		this.saveConfig();
+		
+		plotManager.saveAll();
+		nationManager.saveAll();
+		townManager.saveAll();
+		rankManager.saveAll();
+		inviteManager.saveAll();
+		userManager.saveAll();
+		database = null;
+		
 		this.getLogger().info(this.getVersion()+ " Unloaded");
 	}
 	

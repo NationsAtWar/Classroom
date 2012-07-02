@@ -1,1 +1,9 @@
 currency: false
+datasource:
+	use_mysql: true
+    mysql:
+        db_name: nationsatwar
+        user: 
+        pass: 
+        url: localhost
+        port: 3306

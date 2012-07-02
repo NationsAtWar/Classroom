@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Invite;
+import org.nationsatwar.nations.objects.Invite.InviteType;
 import org.nationsatwar.nations.objects.User;
 
 public class Accept extends NationsCommand {
@@ -26,23 +27,33 @@ public class Accept extends NationsCommand {
 		}
 		Nations nations = (Nations) plugin;
 		
+		if(user == null) {
+			this.errorText(commandSender, "Console doesn't get invites. Poor console :(", null);
+			return;
+		}
+		
 		if(command[0].equalsIgnoreCase("list")) {
 			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
 				this.helpText(commandSender, "i.e. '/accept list", "Lists any invites you may have that you can accept.");
 				return;
 			}
 			
-			User user = nations.userManager.getUserByName(commandSender.getName());
 			ArrayList<Invite> invites = null;
 			if(user != null) {
 				invites = nations.inviteManager.getInvites(user);
 			}
 			if(invites == null || invites.isEmpty()) {
 				this.successText(commandSender, null, "No invites present.");
+				return;
 			}
 			for(Invite inv : invites) {
-				User inviter = (User) inv.getInviter();
-				this.successText(commandSender, inv.getNiceType()+" Invitation From: "+inviter.getName()+" ("+nations.nationManager.getNationByUsername(inviter.getName())+")", null);
+				
+				if(inv.getType() == InviteType.PLAYERNATION) {
+					User inviter = nations.userManager.getUserByID(inv.getInviter());
+					this.successText(commandSender, inv.getNiceType()+" Invitation From: "+inviter.getName()+" ("+nations.nationManager.getNationByUserID(inviter.getID())+")", null);
+				}
+				
+				
 			}
 			return;
 		}
@@ -53,7 +64,6 @@ public class Accept extends NationsCommand {
 				return;
 			}
 			
-			User user = nations.userManager.getUserByName(commandSender.getName());
 			ArrayList<Invite> invites = null;
 			if(user != null) {
 				invites = nations.inviteManager.getInvites(user);
@@ -62,11 +72,11 @@ public class Accept extends NationsCommand {
 				this.successText(commandSender, null, "No invites present.");
 			}
 			for(Invite inv : invites) {
-				User inviter = (User) inv.getInviter();
+				User inviter = nations.userManager.getUserByID(inv.getInviter());
 				if(inviter.getName().equalsIgnoreCase(command[1])) {
-					if(nations.nationManager.getNationByUsername(user.getName()).removeMember(user) && 
-							nations.nationManager.getNationByUsername(inviter.getName()).addMember(user)) {
-						this.successText(commandSender, "You've accepted your invitation into "+nations.nationManager.getNationByUsername(inviter.getName()).getName()+".", null);					
+					if(nations.nationManager.getNationByUserID(user.getID()).removeMember(user) && 
+							nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getFounderRank())) {
+						this.successText(commandSender, "You've accepted your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
 					}
 					return;
 				}

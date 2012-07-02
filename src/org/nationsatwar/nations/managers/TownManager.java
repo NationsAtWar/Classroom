@@ -1,67 +1,112 @@
 package org.nationsatwar.nations.managers;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
-import org.nationsatwar.nations.objects.Plot;
-import org.nationsatwar.nations.objects.Rank;
+import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Town;
-import org.nationsatwar.nations.objects.User;
-import org.nationsatwar.nations.objects.Rank.RankType;
 
 public class TownManager extends NationsManagement {
-	private HashMap<String, Town> townMap = new HashMap<String, Town>();
+	private HashMap<Integer, Town> townMap = new HashMap<Integer, Town>();
 
 	public TownManager(PluginBase plugin) {
 		super(plugin);
 	}
-
-	public boolean exists(String townName) {
-		if(townMap.isEmpty()) {
-			return false;
+	
+	@Override
+	public void loadAll() {
+		if(plugin instanceof Nations) {
+			return;
 		}
-		return townMap.containsKey(townName);
+		Nations nations = (Nations) plugin;
+		
+		townMap.clear();
+		for (NationsObject obj : nations.database.gatherDataset(new Town(0, null))) {
+			Town object = (Town) obj;
+			if (!townMap.containsKey(object.getID()))
+				townMap.put(object.getID(), object);
+		}
 	}
 
-	public Town getTownByUsername(String name) {
-		for(Town town : this.townMap.values()) {
-			if(town.getMembers().contains(name)) {
-				return town;
-			}
+	@Override
+	public void saveAll() {
+		if(plugin instanceof Nations) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		
+		for (Town object : townMap.values()) {
+			nations.database.save(object);
+		}
+	}
+
+	@Override
+	public void deleteAll() {
+		if(plugin instanceof Nations) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		
+		for (Town object : townMap.values()) {
+			nations.database.delete(object);
+		}
+		townMap.clear();
+	}
+	
+	public Town createTown(String name) {
+		int newKey = Collections.max(townMap.keySet())+1;
+		Town newTown = new Town(newKey, name);
+		if(this.addTown(newTown)) {
+			return newTown;
 		}
 		return null;
 	}
-
-	public boolean addFounder(Town town, String name) {
-		if(plugin instanceof Nations) {
-			User user = ((Nations) plugin).userManager.getUserByName(name);
-			if(user == null) {
-				return false;
-			}
-			for(Rank rank : town.getRanks(RankType.FOUNDER)) {
-				if(town.setRank(user.getName(), rank)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	public boolean addTown(Town town) {
-		if(!this.exists(town.getName())) {
-			this.townMap.put(town.getName(), town);
+	
+	private boolean addTown(Town town) {
+		if(!this.townMap.containsKey(town.getID())) {
+			this.townMap.put(town.getID(), town);
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean addPlotToTown(Plot plot, Town town) {
-		if(town.addPlot(plot)) {
-			return true;
+	//Trying not to use
+	/*private Town getTownByUsername(String name) {
+		for(Town town : this.townMap.values()) {
+			if(town.getMembers().contains(name)) {
+				return town;
+			}
 		}
-		return false;
+		return null;
+	}*/
+
+	public Town getTownByUserID(int id) {
+		for(Town town : this.townMap.values()) {
+			if(town.getMembers(null).contains(id)) {
+				return town;
+			}
+		}
+		return null;		
 	}
 
+	public ArrayList<String> getTownList() {
+		ArrayList<String> townList = new ArrayList<String>();
+		for(Town town : this.townMap.values()) {
+			townList.add(town.getName());
+		}
+		return townList;
+	}
+
+	public Town getTownByName(String townName) {
+		for(Town town : this.townMap.values()) {
+			if(town.getName().equalsIgnoreCase(townName)) {
+				return town;
+			}
+		}
+		return null;
+	}
 }

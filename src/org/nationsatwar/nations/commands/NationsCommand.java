@@ -4,17 +4,27 @@ import java.util.ArrayList;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
+import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.User;
 
 public abstract class NationsCommand implements Runnable {
 	protected static PluginBase plugin;
 	protected CommandSender commandSender;
+	protected User user;
 	protected String[] command;
 	protected String commandLabel;
 	
 	protected NationsCommand(CommandSender commandSender, String commandLabel, String[] command) {
 		this.commandSender = commandSender;
 		this.command = command;
+		if(plugin instanceof Nations) {
+			Nations nations = (Nations) plugin;
+			if(commandSender instanceof Player) {
+				this.user = nations.userManager.getUserByPlayer((Player) commandSender);
+			}
+		}
 	}
 	
 	/**

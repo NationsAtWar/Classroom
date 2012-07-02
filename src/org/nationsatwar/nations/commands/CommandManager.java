@@ -1,7 +1,9 @@
 package org.nationsatwar.nations.commands;
 
 import java.util.logging.Level;
+import org.nationsatwar.nations.Nations;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -28,6 +30,13 @@ public class CommandManager {
 		if(!(sender instanceof Player) && !(sender instanceof ConsoleCommandSender)) {
 			plugin.getLogger().log(Level.WARNING, "CommandSender not console or player.");   
 			return false;
+		}
+		if((sender instanceof Player) && (plugin instanceof Nations)) {
+			Player player = (Player) sender;
+			if(!player.hasPermission("nationsatwar.nations.player")) {
+				sender.sendMessage(ChatColor.RED + "Sorry, you don't have permissions for that.");
+				return false;
+			}
 		}
 		
 		if(commandLabel.equalsIgnoreCase("found")) {

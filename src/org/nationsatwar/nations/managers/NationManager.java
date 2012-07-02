@@ -1,33 +1,73 @@
 package org.nationsatwar.nations.managers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
-import org.nationsatwar.nations.objects.Rank;
-import org.nationsatwar.nations.objects.Rank.RankType;
-import org.nationsatwar.nations.objects.Town;
-import org.nationsatwar.nations.objects.User;
+import org.nationsatwar.nations.objects.NationsObject;
 
 public class NationManager extends NationsManagement {
-	private HashMap<String, Nation> nationMap = new HashMap<String, Nation>();
+	private HashMap<Integer, Nation> nationMap = new HashMap<Integer, Nation>();
 	
 	public NationManager(PluginBase plugin) {
 		super(plugin);
 	}
-
-	public boolean exists(String nationName) {
-		if(nationMap.isEmpty()) {
-			return false;
+	
+	@Override
+	public void loadAll() {
+		if(plugin instanceof Nations) {
+			return;
 		}
-		return nationMap.containsKey(nationName);
+		Nations nations = (Nations) plugin;
+		
+		nationMap.clear();
+		for (NationsObject obj : nations.database.gatherDataset(new Nation(0, null))) {
+			Nation object = (Nation) obj;
+			if (!nationMap.containsKey(object.getID()))
+				nationMap.put(object.getID(), object);
+		}
 	}
 
-	public boolean addNation(Nation nation) {
-		if(!this.exists(nation.getName())) {
-			this.nationMap.put(nation.getName(), nation);
+	@Override
+	public void saveAll() {
+		if(plugin instanceof Nations) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		
+		for (Nation object : nationMap.values()) {
+			nations.database.save(object);
+		}
+	}
+
+	@Override
+	public void deleteAll() {
+		if(plugin instanceof Nations) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		
+		for (Nation object : nationMap.values()) {
+			nations.database.delete(object);
+		}
+		nationMap.clear();
+	}
+	
+	public Nation createNation(String name) {
+		int newKey = Collections.max(nationMap.keySet())+1;
+		Nation newNation = new Nation(newKey, name);
+		if(this.addNation(newNation)) {
+			return newNation;
+		}
+		return null;
+	}
+
+	private boolean addNation(Nation nation) {
+		if(!this.nationMap.containsKey(nation.getID())) {
+			this.nationMap.put(nation.getID(), nation);
 			return true;
 		} else {
 			return false;
@@ -35,38 +75,38 @@ public class NationManager extends NationsManagement {
 	}
 
 	public ArrayList<String> getNationList() {
-		return new ArrayList<String>(nationMap.keySet());
+		ArrayList<String> nationList = new ArrayList<String>();
+		for(Nation nation : this.nationMap.values()) {
+			nationList.add(nation.getName());
+		}
+		return nationList;
 	}
-
-	public boolean addFounder(Nation nation, String name) {
-		if(plugin instanceof Nations) {
-			User user = ((Nations) plugin).userManager.getUserByName(name);
-			if(user == null) {
-				return false;
-			}
-			for(Rank rank : nation.getRanks(RankType.FOUNDER)) {
-				if(nation.setRank(user.getName(), rank)) {
-					return true;
-				}
+	
+	public Nation getNationByUserID(int id) {
+		for(Nation nation : this.nationMap.values()) {
+			if(nation.getMembers(null).contains(id)) {
+				return nation;
 			}
 		}
-		return false;
+		return null;		
 	}
 
-	public Nation getNationByUsername(String name) {
+	//Trying not to use
+	/*private Nation getNationByUsername(String name) {
 		for(Nation nation : this.nationMap.values()) {
-			if(nation.getMembers().contains(name)) {
+			if(nation.getMembers(null).contains(name)) {
+				return nation;
+			}
+		}
+		return null;
+	}*/
+	
+	public Nation getNationByName(String name) {
+		for(Nation nation : this.nationMap.values()) {
+			if(nation.getName().equalsIgnoreCase(name)) {
 				return nation;
 			}
 		}
 		return null;
 	}
-
-	public boolean addTownToNation(Town town, Nation nation) {
-		if(nation.addTown(town)) {
-			return true;
-		}
-		return false;
-	}
-
 }
