@@ -56,31 +56,33 @@ public class Found extends NationsCommand {
 			}
 			Nations nations = (Nations) plugin;
 			
-			if(!nations.nationManager.getNationList().contains(nationName)) {
-				if(user != null) {
-					if(nations.nationManager.getNationByUserID(user.getID()) != null) {
-						this.errorText(commandSender, null, "You are already a member of a nation. You must leave that nation " +
-								"before you can found a new one!");
-						return;						
-					}
-				}
-				Nation nation = nations.nationManager.createNation(nationName);
-				if(nation != null) {
-					nations.notifyAll(nationName + " created!");
-				} else {
-					this.errorText(commandSender, "Couldn't create nation.", null);
+			for(Nation nation : nations.nationManager.getNations().values()) {
+				if(nation.getName().equalsIgnoreCase(nationName)) {
+					this.errorText(commandSender, "A Nation with that name already exists!", null);
 					return;
 				}
-				if(user != null) {
-					if(nation.addMember(user, nations.rankManager.getFounderRank())) {
-						this.successText(commandSender, null, "Added you as a founder of "+nation.getName());
-					}
+			}
+			
+			if(user != null) {
+				if(nations.nationManager.getNationByUserID(user.getID()) != null) {
+					this.errorText(commandSender, null, "You are already a member of a nation. You must leave that nation " +
+							"before you can found a new one!");
+					return;						
 				}
-				return;
+			}
+			Nation nation = nations.nationManager.createNation(nationName);
+			if(nation != null) {
+				nations.notifyAll(nationName + " created!");
 			} else {
-				this.errorText(commandSender, "A Nation with that name already exists!", null);
+				this.errorText(commandSender, "Couldn't create nation.", null);
 				return;
 			}
+			if(user != null) {
+				if(nation.addMember(user, nations.rankManager.getFounderRank())) {
+					this.successText(commandSender, null, "Added you as a founder of "+nation.getName());
+				}
+			}
+			return;
 		}
 			
 		if(command[0].equalsIgnoreCase("town")) {
@@ -123,47 +125,49 @@ public class Found extends NationsCommand {
 			
 			Nation nation = nations.nationManager.getNationByUserID(user.getID());
 			
-			if(!nations.townManager.getTownList().contains(townName))  {
-				if(nation != null) {
-					if(nations.townManager.getTownByUserID(user.getID()) == null) {
-					
-						Town town = nations.townManager.createTown(townName);
-						if(town == null ) {
-							this.errorText(commandSender, "Couldn't create town.", null);
-							return;
-						} else {
-							nations.notifyAll(townName + " created!");
-						}
-						if(user != null) {							
-							if(town.addMember(user, nations.rankManager.getFounderRank())) {
-								this.successText(commandSender, null, "Added you as a founder of "+town.getName());
-							}
-							
-							Plot plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation());
-							if(plot == null) {
-								this.errorText(commandSender, "Couldn't create plot.", null);
-							}
-							
-							if(!town.addPlot(plot)) {
-								this.errorText(commandSender, "Error assigning plot to town.", null);
-							}
-							if(!nation.addTown(town)) {
-								this.errorText(commandSender, "Error assigning town to nation.", null);
-							}
-							nations.plotManager.showBoundaries(plot);
-							this.successText(commandSender, null, "You now own this plot.");
-						}
-						return;
-					} else {
-						this.errorText(commandSender, null, "You are already a member of a town. You must leave that town to form a new one.");
-						return;						
-					}
-				} else {
-					this.errorText(commandSender, null, "You are not a member of a nation. You can't form a town without a nation.");
+			for(Town town : nations.townManager.getTowns().values()) {
+				if(town.getName().equalsIgnoreCase(townName)) {
+					this.errorText(commandSender, "A Town with that name already exists!", null);
 					return;
 				}
+			}
+			
+			if(nation != null) {
+				if(nations.townManager.getTownByUserID(user.getID()) == null) {
+				
+					Town town = nations.townManager.createTown(townName);
+					if(town == null ) {
+						this.errorText(commandSender, "Couldn't create town.", null);
+						return;
+					} else {
+						nations.notifyAll(townName + " created!");
+					}
+					if(user != null) {							
+						if(town.addMember(user, nations.rankManager.getFounderRank())) {
+							this.successText(commandSender, null, "Added you as a founder of "+town.getName());
+						}
+						
+						Plot plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation());
+						if(plot == null) {
+							this.errorText(commandSender, "Couldn't create plot.", null);
+						}
+						
+						if(!town.addPlot(plot)) {
+							this.errorText(commandSender, "Error assigning plot to town.", null);
+						}
+						if(!nation.addTown(town)) {
+							this.errorText(commandSender, "Error assigning town to nation.", null);
+						}
+						nations.plotManager.showBoundaries(plot);
+						this.successText(commandSender, null, "You now own this plot.");
+					}
+					return;
+				} else {
+					this.errorText(commandSender, null, "You are already a member of a town. You must leave that town to form a new one.");
+					return;						
+				}
 			} else {
-				this.errorText(commandSender, "A Town with that name already exists!", null);
+				this.errorText(commandSender, null, "You are not a member of a nation. You can't form a town without a nation.");
 				return;
 			}
 		}

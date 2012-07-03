@@ -1,9 +1,9 @@
 package org.nationsatwar.nations.commands;
 
 import java.util.ArrayList;
-
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
 
 public class World extends NationsCommand {
 
@@ -31,7 +31,7 @@ public class World extends NationsCommand {
 		}
 		Nations nations = (Nations) plugin;
 		
-		ArrayList<String> nationList = nations.nationManager.getNationList();
+		ArrayList<Nation> nationList = new ArrayList<Nation>(nations.nationManager.getNations().values());
 		if(nationList == null || nationList.size() < 1) {
 			this.errorText(commandSender, null, "No nations yet.");
 			return;
@@ -48,7 +48,7 @@ public class World extends NationsCommand {
 		int nationNumber = (pageNumber - 1)*10;
 		int initialNationNumber = nationNumber;
 		while(nationNumber<initialNationNumber + 10 && nationNumber < nationList.size()) {
-			String nationName = nationList.get(nationNumber);
+			String nationName = nationList.get(nationNumber).getName();
 			this.successText(commandSender, null, nationName);
 			nationNumber++;
 		}

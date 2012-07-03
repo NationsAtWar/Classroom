@@ -98,8 +98,12 @@ public class PlotManager extends NationsManagement {
 		return null;
 	}
 	
-	public String getLocationKey(Location location) {
+	private String getLocationKey(Location location) {
 		return location.getWorld()+";"+location.getChunk().getX()+";"+location.getChunk().getZ();
+	}
+
+	public Plot getPlotByID(int key) {
+		return this.plotMap.get(key);
 	}
 
 }

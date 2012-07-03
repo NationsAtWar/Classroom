@@ -70,4 +70,8 @@ public class Town extends NationsObject {
 		}
 		return false;
 	}
+
+	public ArrayList<Integer> getPlots() {
+		return this.plots;
+	}
 }

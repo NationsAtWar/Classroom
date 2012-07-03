@@ -70,4 +70,8 @@ public class Nation extends NationsObject {
 		}
 		return false;
 	}
+
+	public ArrayList<Integer> getTowns() {
+		return this.towns;
+	}
 }

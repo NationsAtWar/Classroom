@@ -1,6 +1,5 @@
 package org.nationsatwar.nations.managers;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -98,7 +97,7 @@ public class TownManager extends NationsManagement {
 		}
 		return null;		
 	}
-
+/*
 	public ArrayList<String> getTownList() {
 		ArrayList<String> townList = new ArrayList<String>();
 		for(Town town : this.townMap.values()) {
@@ -107,12 +106,20 @@ public class TownManager extends NationsManagement {
 		return townList;
 	}
 
-	public Town getTownByName(String townName) {
+	/*public Town getTownByName(String townName) {
 		for(Town town : this.townMap.values()) {
 			if(town.getName().equalsIgnoreCase(townName)) {
 				return town;
 			}
 		}
 		return null;
+	}*/
+
+	public Town getTownByID(int key) {
+		return this.townMap.get(key);		
+	}
+
+	public HashMap<Integer, Town> getTowns() {
+		return this.townMap;
 	}
 }
