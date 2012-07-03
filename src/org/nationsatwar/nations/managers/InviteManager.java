@@ -3,6 +3,7 @@ package org.nationsatwar.nations.managers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
@@ -20,7 +21,7 @@ public class InviteManager extends NationsManagement {
 	
 	@Override
 	public void loadAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -35,7 +36,7 @@ public class InviteManager extends NationsManagement {
 
 	@Override
 	public void saveAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -47,7 +48,7 @@ public class InviteManager extends NationsManagement {
 
 	@Override
 	public void deleteAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -59,7 +60,12 @@ public class InviteManager extends NationsManagement {
 	}
 	
 	public boolean createInvite(InviteType playernation, User inviter, User invitee) {
-		int newKey = Collections.max(inviteMap.keySet())+1;
+		int newKey = 0; 
+		try {
+			newKey = Collections.max(inviteMap.keySet())+1;
+		} catch(NoSuchElementException e) {
+			
+		}
 		Invite newInvite = new Invite(newKey, InviteType.PLAYERNATION, inviter.getID(), invitee.getID());
 		if(this.addInvite(newInvite)) {
 			return true;

@@ -7,25 +7,25 @@ commands:
   found:
     description: Creates a nation.
     usage: /found
-    permission: nations.nations.user
+    permission: nationsatwar.nations.player
   world:
     description: Shows information about the world.
     usage: /world
-    permission: nations.nations.user
+    permission: nationsatwar.nations.player
   invite:
     description: Creates invitations.
     usage: /invite [player]
-    permission: nations.nations.user
+    permission: nationsatwar.nations.player
   accept:
     description: Accepts invitations.
     usage: /invite [player]
-    permission: nations.nations.user
+    permission: nationsatwar.nations.player
   claim:
     description: Claims land for your nation.
     usage: /invite [player]
-    permission: nations.nations.user
+    permission: nationsatwar.nations.player
 
 permissions:
-    nations.nations.user:
+    nationsatwar.nations.player:
         description: Flags the user as an accepted nations player.
         default: true

@@ -1,6 +1,6 @@
 currency: false
 datasource:
-	use_mysql: true
+    use_mysql: true
     mysql:
         db_name: nationsatwar
         user: 

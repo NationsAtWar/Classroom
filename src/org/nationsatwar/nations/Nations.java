@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.nationsatwar.listeners.NationsUserListener;
 import org.nationsatwar.nations.commands.CommandManager;
 import org.nationsatwar.nations.datasource.DataSource;
+import org.nationsatwar.nations.datasource.MySQL;
 import org.nationsatwar.nations.managers.InviteManager;
 import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.PlotManager;
@@ -15,7 +16,7 @@ import org.nationsatwar.nations.managers.TownManager;
 import org.nationsatwar.nations.managers.UserManager;
 
 public class Nations extends JavaPlugin {
-	public DataSource database = DataSource.getDatabase(this);
+	public DataSource database;
 
 	public NationManager 	nationManager 	= new NationManager(this);
 	public TownManager		townManager		= new TownManager(this);
@@ -34,6 +35,9 @@ public class Nations extends JavaPlugin {
 		
 		new NationsUserListener(this);
 		this.getConfig().options().copyDefaults(true);
+		
+		if(this.getConfig().getBoolean("datasource.use_mysql"))
+			database = new MySQL(this);
 		
 		plotManager.loadAll();
 		nationManager.loadAll();

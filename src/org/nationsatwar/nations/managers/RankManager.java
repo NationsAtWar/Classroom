@@ -2,6 +2,7 @@ package org.nationsatwar.nations.managers;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
@@ -35,7 +36,7 @@ public class RankManager extends NationsManagement {
 	
 	@Override
 	public void loadAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -50,7 +51,7 @@ public class RankManager extends NationsManagement {
 
 	@Override
 	public void saveAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -62,7 +63,7 @@ public class RankManager extends NationsManagement {
 
 	@Override
 	public void deleteAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -74,7 +75,12 @@ public class RankManager extends NationsManagement {
 	}
 	
 	public Rank createRank(String name, RankType type) {
-		int newKey = Collections.max(rankMap.keySet())+1;
+		int newKey = 0; 
+		try {
+			newKey = Collections.max(rankMap.keySet())+1;
+		} catch(NoSuchElementException e) {
+			
+		}
 		Rank newRank = new Rank(newKey, name, type);
 		if(this.addRank(newRank)) {
 			return newRank;

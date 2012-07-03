@@ -38,8 +38,9 @@ public class MySQL extends DataSource {
 	private HashMap<String, HashMap<String, ColumnType>> columnTypes;
 	private HashMap<String, HashMap<String, String>> queries;
 	
-	public MySQL(PluginBase pluginInstance) {
-		DB_NAME = plugin.getConfig().getString("datasource.mysql.db_name");
+	public MySQL(PluginBase plugin) {
+		super(plugin);
+		DB_NAME = plugin.getConfig().getString("datasource.mysql.db");
 		URL = "jdbc:mysql://" + plugin.getConfig().getString("datasource.mysql.url") + ":" + plugin.getConfig().getString("datasource.mysql.port") + "/";
 		USER = plugin.getConfig().getString("datasource.mysql.user");
 		PASS = plugin.getConfig().getString("datasource.mysql.pass");
@@ -291,7 +292,7 @@ public class MySQL extends DataSource {
 			}
 			return i - 1;
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.WARNING,"Error preparing key (" + obj.toString() + "): " + e);
+			plugin.getLogger().log(Level.WARNING,"Error preparing key (" + obj.toString() + "): " + e + " - " + e.getMessage());
 		}
 		return 0;
 	}
@@ -352,6 +353,7 @@ public class MySQL extends DataSource {
 					break;
 				}
 			}
+			plugin.getLogger().log(Level.INFO, stmt.toString());
 			stmt.executeUpdate();
 			stmt.close();
 			// save any lists
@@ -416,7 +418,7 @@ public class MySQL extends DataSource {
 			conn.close();
 			return true;
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Failed to save (" + obj.toString() + "): " + e);
+			plugin.getLogger().log(Level.SEVERE, "Failed to save (" + obj.toString() + "): " + e + " - " + e.getMessage());
 			try {
 				conn.rollback();
 				conn.setAutoCommit(true);
@@ -548,11 +550,12 @@ public class MySQL extends DataSource {
 				}
 			}
 			rs.close();
+			plugin.getLogger().log(Level.INFO, stmt.toString());
 			stmt.close();
 			conn.close();
 			return true;
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Failed to load (" + obj.toString() + "): " + e);
+			plugin.getLogger().log(Level.SEVERE, "Failed to load (" + obj.toString() + "): " + e + " - " + e.getMessage());
 		}
 		return false;
 	}
@@ -595,7 +598,7 @@ public class MySQL extends DataSource {
 			conn.close();
 			return true;
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Failed to delete (" + obj.toString() + "): " + e);
+			plugin.getLogger().log(Level.SEVERE, "Failed to delete (" + obj.toString() + "): " + e + " - " + e.getMessage());
 			try {
 				conn.rollback();
 				conn.setAutoCommit(true);
@@ -728,10 +731,11 @@ public class MySQL extends DataSource {
 				dataset.add(obj);
 			}
 			rs.close();
+			plugin.getLogger().log(Level.INFO, stmt.toString());
 			stmt.close();
 			conn.close();
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE, "Failed to gather (" + objtype + "): " + e);
+			plugin.getLogger().log(Level.SEVERE, "Failed to gather (" + objtype + "): " + e + " - " + e.getMessage());
 		}
 		return dataset;
 	}

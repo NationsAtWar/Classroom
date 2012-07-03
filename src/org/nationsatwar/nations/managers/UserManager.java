@@ -3,6 +3,7 @@ package org.nationsatwar.nations.managers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
@@ -19,7 +20,7 @@ public class UserManager extends NationsManagement {
 	
 	@Override
 	public void loadAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -34,7 +35,7 @@ public class UserManager extends NationsManagement {
 
 	@Override
 	public void saveAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -46,7 +47,7 @@ public class UserManager extends NationsManagement {
 
 	@Override
 	public void deleteAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -70,7 +71,12 @@ public class UserManager extends NationsManagement {
 	}
 	
 	public boolean createUser(String name) {
-		int newKey = Collections.max(this.userMap.keySet())+1;
+		int newKey = 0; 
+		try {
+			newKey = Collections.max(userMap.keySet())+1;
+		} catch(NoSuchElementException e) {
+			
+		}
 		User newUser = new User(newKey, name);
 		if(this.addUser(newUser)) {
 			return true;

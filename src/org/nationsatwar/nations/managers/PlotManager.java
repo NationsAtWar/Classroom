@@ -2,6 +2,7 @@ package org.nationsatwar.nations.managers;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,7 +20,7 @@ public class PlotManager extends NationsManagement {
 	
 	@Override
 	public void loadAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -34,7 +35,7 @@ public class PlotManager extends NationsManagement {
 
 	@Override
 	public void saveAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -46,7 +47,7 @@ public class PlotManager extends NationsManagement {
 
 	@Override
 	public void deleteAll() {
-		if(plugin instanceof Nations) {
+		if(!(plugin instanceof Nations)) {
 			return;
 		}
 		Nations nations = (Nations) plugin;
@@ -70,7 +71,12 @@ public class PlotManager extends NationsManagement {
 	}
 	
 	public Plot createPlot(Location loc) {
-		int newKey = Collections.max(this.plotMap.keySet())+1;
+		int newKey = 0; 
+		try {
+			newKey = Collections.max(plotMap.keySet())+1;
+		} catch(NoSuchElementException e) {
+			
+		}
 		Plot newPlot = new Plot(newKey, loc);
 		if(this.addPlot(newPlot)) {
 			return newPlot;

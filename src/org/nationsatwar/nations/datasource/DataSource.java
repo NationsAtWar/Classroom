@@ -8,10 +8,8 @@ import org.nationsatwar.nations.objects.NationsObject;
 public abstract class DataSource {
 	protected PluginBase plugin;
 
-	public static DataSource getDatabase (PluginBase instance) {
-		if(instance.getConfig().getBoolean("use_mysql"))
-			return new MySQL(instance);
-		return null;
+	public DataSource(PluginBase instance) {
+		plugin = instance;
 	}
 	
 	public abstract boolean save(NationsObject obj);

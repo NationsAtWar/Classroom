@@ -9,9 +9,11 @@ public class Plot extends NationsObject {
 	
 	public Plot(int newId, Location location) {
 		super(newId);
-		this.x = location.getChunk().getX();
-		this.z = location.getChunk().getZ();
-		this.world = location.getWorld().getName();
+		if(location != null) {
+			this.x = location.getChunk().getX();
+			this.z = location.getChunk().getZ();
+			this.world = location.getWorld().getName();
+		}
 	}
 
 	public String getLocationKey() {
