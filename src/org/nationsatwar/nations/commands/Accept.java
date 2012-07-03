@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Invite;
 import org.nationsatwar.nations.objects.Invite.InviteType;
+import org.nationsatwar.nations.objects.Nation;
+import org.nationsatwar.nations.objects.Town;
 import org.nationsatwar.nations.objects.User;
 
 public class Accept extends NationsCommand {
@@ -70,12 +72,20 @@ public class Accept extends NationsCommand {
 			}
 			if(invites == null || invites.isEmpty()) {
 				this.successText(commandSender, null, "No invites present.");
+				return;
 			}
 			for(Invite inv : invites) {
 				User inviter = nations.userManager.getUserByID(inv.getInviter());
 				if(inviter.getName().equalsIgnoreCase(command[1])) {
-					if(nations.nationManager.getNationByUserID(user.getID()).removeMember(user) && 
-							nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getFounderRank())) {
+					Nation nation = nations.nationManager.getNationByUserID(user.getID());
+					Town town = nations.townManager.getTownByUserID(user.getID());
+					if(nation != null) {
+						nation.removeMember(user);
+					}
+					if(town != null) {
+						town.removeMember(user);
+					}
+					if(nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank())) {
 						this.successText(commandSender, "You've accepted your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
 					}
 					return;
@@ -88,7 +98,7 @@ public class Accept extends NationsCommand {
 		
 		if(command[0].equalsIgnoreCase("town")) {
 			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
-				this.helpText(commandSender, "i.e. '/accept town [town name]", "accepts your town into your nation.");
+				this.helpText(commandSender, "i.e. '/accept town [town name]", "accepts your town into the nation.");
 				return;
 			}
 		}
