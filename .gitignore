@@ -4,6 +4,7 @@
 *.DS_Store
 *.swp
 *.out
+*.class
 
 ## Eclipse
 .project
@@ -29,3 +30,7 @@ local.properties
 
 # PDT-specific
 .buildpath
+# Package Files #
+*.jar
+*.war
+*.ear
