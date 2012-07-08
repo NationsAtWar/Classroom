@@ -4,6 +4,10 @@ public class Rank extends NationsObject {
 	private String name;
 	private RankType type;
 	
+	public Rank() {
+		super(-1);
+	}
+
 	public Rank(int newID, String newName, RankType newType) {
 		super(newID);
 		this.setName(newName);

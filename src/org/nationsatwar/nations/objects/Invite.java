@@ -5,6 +5,10 @@ public class Invite extends NationsObject {
 	private Integer invitee;
 	private Integer inviter;
 	
+	public Invite() {
+		super(-1);
+	}
+	
 	public Invite(int newId, InviteType newType, int newInviter, int newInvitee) {
 		super(newId);
 		this.type = newType;

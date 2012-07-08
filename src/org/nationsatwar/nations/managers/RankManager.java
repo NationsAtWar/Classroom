@@ -15,6 +15,21 @@ public class RankManager extends NationsManagement {
 
 	public RankManager(PluginBase plugin) {
 		super(plugin);
+	}
+	
+	@Override
+	public void loadAll() {
+		if(!(plugin instanceof Nations)) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		
+		rankMap.clear();
+		for (NationsObject obj : nations.database.gatherDataset(new Rank(0, null, null))) {
+			Rank object = (Rank) obj;
+			if (!rankMap.containsKey(object.getID()))
+				rankMap.put(object.getID(), object);
+		}
 		
 		boolean founder = false;
 		boolean recruit = false;
@@ -31,21 +46,6 @@ public class RankManager extends NationsManagement {
 		}
 		if(!recruit) {
 			this.createRank("Recruit", RankType.RECRUIT);
-		}
-	}
-	
-	@Override
-	public void loadAll() {
-		if(!(plugin instanceof Nations)) {
-			return;
-		}
-		Nations nations = (Nations) plugin;
-		
-		rankMap.clear();
-		for (NationsObject obj : nations.database.gatherDataset(new Rank(0, null, null))) {
-			Rank object = (Rank) obj;
-			if (!rankMap.containsKey(object.getID()))
-				rankMap.put(object.getID(), object);
 		}
 	}
 
@@ -79,7 +79,7 @@ public class RankManager extends NationsManagement {
 		try {
 			newKey = Collections.max(rankMap.keySet())+1;
 		} catch(NoSuchElementException e) {
-			
+			newKey = 0;
 		}
 		Rank newRank = new Rank(newKey, name, type);
 		if(this.addRank(newRank)) {

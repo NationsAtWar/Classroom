@@ -43,6 +43,10 @@ public class CommandManager {
 			new Found(sender, commandLabel, args).run();
 			return true;
 		}
+		if(commandLabel.equalsIgnoreCase("leave")) {
+			new Leave(sender, commandLabel, args).run();
+			return true;
+		}
 		if(commandLabel.equalsIgnoreCase("world")) {
 			new World(sender, commandLabel, args).run();
 			return true;

@@ -19,13 +19,14 @@ import java.util.logging.Level;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.NationsObject;
+import org.nationsatwar.nations.objects.Rank.RankType;
 
 public class MySQL extends DataSource {
 	private static final String SQL_DRIVER = "com.mysql.jdbc.Driver";
 	
 	
 	enum ColumnType {
-		STRING, STRING_KEY, STRING_LIST, INT, INT_KEY, INT_LIST, DOUBLE, DOUBLE_LIST, BOOL, DATETIME, OBJECT, HASHMAP_STRING_DOUBLE, HASHMAP_INT_INT
+		STRING, STRING_KEY, STRING_LIST, INT, INT_KEY, INT_LIST, DOUBLE, DOUBLE_LIST, BOOL, DATETIME, OBJECT, HASHMAP_STRING_DOUBLE, HASHMAP_INT_INT, RANKTYPE
 	};
 	
 	private String DB_NAME;
@@ -47,6 +48,13 @@ public class MySQL extends DataSource {
 		TABLE_PREFIX = "nations_";
 		
 		this.checkTables();
+		
+		columnNames = new HashMap<String, LinkedList<String>>();
+		columnTypes = new HashMap<String, HashMap<String, ColumnType>>();
+		queries = new HashMap<String, HashMap<String, String>>();
+		queries.put("where", new HashMap<String, String>());
+		queries.put("savelist", new HashMap<String, String>());
+		queries.put("save", new HashMap<String, String>());
 	}
 	
 	private Connection getConnection() {
@@ -91,28 +99,28 @@ public class MySQL extends DataSource {
 		}
 		
 		if(nations.inviteManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"invite", "(`id` int(11) NOT NULL,`type` varchar(40) NOT NULL,`invitee` int(11) NOT NULL,`inviter` int(11) NOT NULL)");
+			this.createTable(dbm, state, TABLE_PREFIX+"invite", "(`id` int(11) NOT NULL,`type` varchar(40) NOT NULL,`invitee` int(11) NOT NULL,`inviter` int(11) NOT NULL,PRIMARY KEY (`id`))");
 		}
 		if(nations.nationManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"nation", "(`id` int(11) NOT NULL,`name` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"nation_rel_customranks", "(`nationid` int(11) NOT NULL,`rankid` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"nation_rel_members", "(`nationid` int(11) NOT NULL,`userid` int(11) NOT NULL,`rankid` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"nation_rel_towns", "(`nationid` int(11) NOT NULL,`townid` int(11) NOT NULL)");	
+			this.createTable(dbm, state, TABLE_PREFIX+"nation", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  PRIMARY KEY (`id`))");
+			this.createTable(dbm, state, TABLE_PREFIX+"nation_customranks", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
+			this.createTable(dbm, state, TABLE_PREFIX+"nation_members", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_idx` int(11) NOT NULL COMMENT 'userid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid',  UNIQUE KEY `_idx` (`_idx`)");
+			this.createTable(dbm, state, TABLE_PREFIX+"nation_towns", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_item` int(11) NOT NULL COMMENT 'townid',  `_idx` int(11) DEFAULT NULL COMMENT 'nationOrder',  UNIQUE KEY `_item` (`_item`))");	
 		}
 		if(nations.plotManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"plot", "(`id` int(11) NOT NULL,`world` varchar(40) NOT NULL,`x` int(11) NOT NULL,`z` int(11) NOT NULL)");
+			this.createTable(dbm, state, TABLE_PREFIX+"plot", "(`id` int(11) NOT NULL,  `world` varchar(40) NOT NULL,  `x` int(11) NOT NULL,  `z` int(11) NOT NULL,  PRIMARY KEY (`id`)))");
 		}
 		if(nations.rankManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"rank", "(`id` int(11) NOT NULL,`name` varchar(40) NOT NULL,`type` varchar(40) NOT NULL)");
+			this.createTable(dbm, state, TABLE_PREFIX+"rank", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  `type` varchar(40) NOT NULL,  PRIMARY KEY (`id`)");
 		}
 		if(nations.townManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"town", "(`id` int(11) NOT NULL,`name` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"town_rel_customranks", "(`townid` int(11) NOT NULL,`rankid` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"town_rel_members", "(`townid` int(11) NOT NULL,`userid` int(11) NOT NULL,`rankid` varchar(40) NOT NULL)");
-			this.createTable(dbm, state, TABLE_PREFIX+"town_rel_plots", "(`townid` int(11) NOT NULL,`plotid` int(11) NOT NULL)");	
+			this.createTable(dbm, state, TABLE_PREFIX+"town", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  PRIMARY KEY (`id`)");
+			this.createTable(dbm, state, TABLE_PREFIX+"town_customranks", "(`id` int(11) NOT NULL COMMENT 'townid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
+			this.createTable(dbm, state, TABLE_PREFIX+"town_members", "(`id` int(11) NOT NULL COMMENT 'townid',  `_idx` int(11) NOT NULL COMMENT 'userid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid',  UNIQUE KEY `_idx` (`_idx`)");
+			this.createTable(dbm, state, TABLE_PREFIX+"town_plots", "(`id` int(11) NOT NULL COMMENT 'townid',  `_item` int(11) NOT NULL COMMENT 'plotid',  `_idx` int(11) DEFAULT NULL,  UNIQUE KEY `_item` (`_item`))");	
 		}
 		if(nations.userManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"user", "(`id` int(11) NOT NULL,`name` varchar(40) NOT NULL)");
+			this.createTable(dbm, state, TABLE_PREFIX+"user", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  PRIMARY KEY (`id`),  UNIQUE KEY `name` (`name`))");
 		}
 		
 		try {
@@ -158,7 +166,7 @@ public class MySQL extends DataSource {
 				map.put("name", ColumnType.STRING);
 				map.put("customRanks", ColumnType.INT_LIST);
 				map.put("members", ColumnType.HASHMAP_INT_INT);
-				map.put("towns", ColumnType.INT);
+				map.put("towns", ColumnType.INT_LIST);
 			} else if (objtype.equals("plot")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("world", ColumnType.STRING);
@@ -167,13 +175,13 @@ public class MySQL extends DataSource {
 			} else if (objtype.equals("rank")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);
-				map.put("type", ColumnType.STRING);
+				map.put("type", ColumnType.RANKTYPE);
 			} else if (objtype.equals("town")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);
 				map.put("customRanks", ColumnType.INT_LIST);
 				map.put("members", ColumnType.HASHMAP_INT_INT);
-				map.put("plots", ColumnType.INT);
+				map.put("plots", ColumnType.INT_LIST);
 			} else if (objtype.equals("user")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);
@@ -195,10 +203,10 @@ public class MySQL extends DataSource {
 
 	private String getQuery(String query, String objtype) {
 
-		String sql;
+		String sql = "";
 		try {
 			// cached?
-			//sql = null;
+			sql = null;
 			sql = queries.get(query).get(objtype);
 			if (sql == null) {
 				if (query.equals("where")) {
@@ -236,6 +244,7 @@ public class MySQL extends DataSource {
 						}*/
 					}
 					sql = "(" + names + ",_idx,_item) VALUES (" + values + ",?,?)";
+					//sql = "(" + names + ") VALUES (" + values + ")";
 				} else if (query.equals("save")) {
 					String table = TABLE_PREFIX + objtype;
 					StringBuilder names = new StringBuilder(), values = new StringBuilder(), update = new StringBuilder();
@@ -264,9 +273,11 @@ public class MySQL extends DataSource {
 					}
 				}
 				queries.get(query).put(objtype, sql);
+				plugin.getLogger().log(Level.FINE, sql);
 			}
 		} catch (Exception e) {
-			plugin.getLogger().log(Level.SEVERE,"getQuery failed (" + query + ":" + objtype + "): " + e.getMessage());
+			plugin.getLogger().log(Level.SEVERE,"getQuery failed (" + query + ":" + objtype + "): " +e.getMessage() + " - "+sql);
+			e.printStackTrace();
 			sql = "";
 		}
 		return sql;
@@ -279,7 +290,8 @@ public class MySQL extends DataSource {
 			HashMap<String, ColumnType> types = getColumns(objtype);
 			int i = 1;
 			for (String key : columnNames.get(objtype)) {
-				Field field = obj.getClass().getDeclaredField(key);
+				Field field = this.getField(obj.getClass(), key);
+				//Field field = obj.getClass().getDeclaredField(key);
 				field.setAccessible(true);
 				switch (types.get(key)) {
 				case STRING_KEY:
@@ -316,12 +328,16 @@ public class MySQL extends DataSource {
 			int i = 1;
 			boolean hasLists = false;
 			for (String name : columnNames.get(objtype)) {
-				Field field = obj.getClass().getDeclaredField(name);
+				Field field = this.getField(obj.getClass(), name);
+				//Field field = obj.getClass().getDeclaredField(name);
 				field.setAccessible(true);
 				switch (types.get(name)) {
 				case STRING:
 				case STRING_KEY:
 					stmt.setString(i++, (String) field.get(obj));
+					break;
+				case RANKTYPE:
+					stmt.setString(i++, field.get(obj).toString());
 					break;
 				case INT:
 				case INT_KEY:
@@ -365,7 +381,8 @@ public class MySQL extends DataSource {
 					case DOUBLE_LIST:
 					case HASHMAP_STRING_DOUBLE:
 					case HASHMAP_INT_INT:
-						Field fieldlist = obj.getClass().getDeclaredField(name);
+						Field fieldlist = this.getField(obj.getClass(), name);
+						//Field fieldlist = obj.getClass().getDeclaredField(name);
 						fieldlist.setAccessible(true);
 						String table = TABLE_PREFIX + objtype + "_" + name;
 						//PreparedStatement clear = conn.prepareStatement("DELETE FROM " + table + " WHERE " + getQuery("where", objtype));
@@ -402,10 +419,10 @@ public class MySQL extends DataSource {
 									break;
 								case HASHMAP_INT_INT:
 									add.setInt(numkeys + 1, (Integer) entry.getKey());
-									add.setInt(numkeys + 2, (Integer) entry.getValue());								
+									add.setInt(numkeys + 2, (Integer) entry.getValue());
+									break;
 								}
-								
-									
+								plugin.getLogger().log(Level.FINE, add.toString());
 								add.executeUpdate();
 							}				
 						}
@@ -419,6 +436,7 @@ public class MySQL extends DataSource {
 			return true;
 		} catch (Exception e) {
 			plugin.getLogger().log(Level.SEVERE, "Failed to save (" + obj.toString() + "): " + e + " - " + e.getMessage());
+			e.printStackTrace();
 			try {
 				conn.rollback();
 				conn.setAutoCommit(true);
@@ -450,11 +468,15 @@ public class MySQL extends DataSource {
 				HashMap<String, ColumnType> types = getColumns(objtype);
 				boolean hasLists = false;
 				for (String name : columnNames.get(objtype)) {
-					Field field = obj.getClass().getDeclaredField(name);
+					Field field = this.getField(obj.getClass(), name);
+					//Field field = obj.getClass().getDeclaredField(name);
 					field.setAccessible(true);
 					switch (types.get(name)) {
 					case STRING:
 						field.set(obj, rs.getString(name));
+						break;
+					case RANKTYPE:
+						field.set(obj, RankType.valueOf(rs.getString(name)));
 						break;
 					case INT:
 						field.setInt(obj, rs.getInt(name));
@@ -486,7 +508,8 @@ public class MySQL extends DataSource {
 				}
 				if (hasLists) {
 					for (String name : columnNames.get(objtype)) {
-						Field field = obj.getClass().getDeclaredField(name);
+						Field field = this.getField(obj.getClass(), name);
+						//Field field = obj.getClass().getDeclaredField(name);
 						field.setAccessible(true);
 						
 						switch (types.get(name)) {
@@ -630,12 +653,16 @@ public class MySQL extends DataSource {
 				obj = obj.getClass().newInstance();
 				boolean hasLists = false;
 				for (String name : columnNames.get(objtype)) {
-					Field field = obj.getClass().getDeclaredField(name);
+					Field field = this.getField(obj.getClass(), name);
+					//Field field = obj.getClass().Field(name);
 					field.setAccessible(true);
 					switch (types.get(name)) {
 					case STRING:
 					case STRING_KEY:
 						field.set(obj, rs.getString(name));
+						break;
+					case RANKTYPE:
+						field.set(obj, RankType.valueOf(rs.getString(name)));
 						break;
 					case INT:
 					case INT_KEY:
@@ -667,7 +694,8 @@ public class MySQL extends DataSource {
 				}
 				if (hasLists) {
 					for (String name : columnNames.get(objtype)) {
-						Field field = obj.getClass().getDeclaredField(name);
+						Field field = this.getField(obj.getClass(), name);
+						//Field field = obj.getClass().getDeclaredField(name);
 						field.setAccessible(true);
 						
 						switch (types.get(name)) {
@@ -675,8 +703,9 @@ public class MySQL extends DataSource {
 						case INT_LIST:
 						case DOUBLE_LIST:
 							String listtable = TABLE_PREFIX + objtype + "_" + name;
-							PreparedStatement getlist = conn.prepareStatement("SELECT _item FROM " + listtable + " WHERE " + getQuery("where", objtype) + " ORDER BY _idx");
+							PreparedStatement getlist = conn.prepareStatement("SELECT _item FROM " + listtable + " WHERE " + getQuery("where", objtype));// + " ORDER BY _idx");
 							prepareKey(getlist, obj);
+							plugin.getLogger().log(Level.FINE, getlist.toString());
 							ResultSet listrs = getlist.executeQuery();
 							if (types.get(name) == ColumnType.STRING_LIST) {
 								ArrayList<String> list = new ArrayList<String>();
@@ -736,7 +765,21 @@ public class MySQL extends DataSource {
 			conn.close();
 		} catch (Exception e) {
 			plugin.getLogger().log(Level.SEVERE, "Failed to gather (" + objtype + "): " + e + " - " + e.getMessage());
+			e.printStackTrace();
 		}
 		return dataset;
+	}
+	
+	 private Field getField(Class<?> theClass, String fieldName) throws NoSuchFieldException {
+		try {
+			return theClass.getDeclaredField(fieldName);
+		} catch (NoSuchFieldException e) {
+			Class<?> superClass = theClass.getSuperclass();
+			if (superClass == null) {
+				throw e;
+			} else {
+				return getField(superClass, fieldName);
+			}
+		}
 	}
 }

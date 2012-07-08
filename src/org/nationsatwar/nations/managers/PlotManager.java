@@ -85,6 +85,13 @@ public class PlotManager extends NationsManagement {
 	}
 
 	private boolean addPlot(Plot plot) {
+		for(Plot checkPlot : this.plotMap.values()) {
+			if(checkPlot.getWorld().equalsIgnoreCase(plot.getWorld()) &&
+					checkPlot.getX() == plot.getX() &&
+					checkPlot.getZ() == plot.getZ()) {
+				return false;
+			}
+		}
 		this.plotMap.put(plot.getID(), plot);
 		return true;
 	}

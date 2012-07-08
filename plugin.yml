@@ -8,6 +8,10 @@ commands:
     description: Creates a nation.
     usage: /found
     permission: nationsatwar.nations.player
+  leave:
+    description: Leaves a nation.
+    usage: /leave
+    permission: nationsatwar.nations.player
   world:
     description: Shows information about the world.
     usage: /world
@@ -18,11 +22,11 @@ commands:
     permission: nationsatwar.nations.player
   accept:
     description: Accepts invitations.
-    usage: /invite [player]
+    usage: /accept [player]
     permission: nationsatwar.nations.player
   claim:
     description: Claims land for your nation.
-    usage: /invite [player]
+    usage: /claim
     permission: nationsatwar.nations.player
 
 permissions:

@@ -7,6 +7,10 @@ public class Plot extends NationsObject {
 	public int x;
 	public int z;
 	
+	public Plot() {
+		super(-1);
+	}
+	
 	public Plot(int newId, Location location) {
 		super(newId);
 		if(location != null) {

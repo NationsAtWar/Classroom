@@ -9,6 +9,10 @@ public class Town extends NationsObject {
 	private HashMap<Integer, Integer> members = new HashMap<Integer, Integer>();
 	private ArrayList<Integer> customRanks = new ArrayList<Integer>();
 	
+	public Town() {
+		super(-1);
+	}
+	
 	public Town(int newID, String name) {
 		super(newID);
 		this.name = name;
