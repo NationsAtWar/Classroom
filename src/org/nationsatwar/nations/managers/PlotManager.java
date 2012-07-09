@@ -28,7 +28,7 @@ public class PlotManager extends NationsManagement {
 		Nations nations = (Nations) plugin;
 		
 		plotMap.clear();
-		for (NationsObject obj : nations.database.gatherDataset(new Plot(0, null, null, null))) {
+		for (NationsObject obj : nations.database.gatherDataset(new Plot())) {
 			Plot plot = (Plot) obj;
 			if (!plotMap.containsKey(plot.getID()))
 				plotMap.put(plot.getID(), plot);

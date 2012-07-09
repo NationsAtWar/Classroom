@@ -4,8 +4,8 @@ import org.bukkit.Location;
 
 public class Plot extends NationsObject {
 	public String world;
-	public int x;
-	public int z;
+	public int x = -1;
+	public int z = -1;
 	private String locationDescription;
 	
 	public Plot() {
@@ -19,7 +19,9 @@ public class Plot extends NationsObject {
 			this.z = location.getChunk().getZ();
 			this.world = location.getWorld().getName();
 		}
-		this.locationDescription = nation.getName()+";"+town.getName();
+		if(nation != null && town != null) {
+			this.locationDescription = nation.getName()+";"+town.getName();
+		}
 	}
 
 	public String getLocationKey() {
