@@ -5,10 +5,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.NationsObject;
+import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.User;
 
 public class UserManager extends NationsManagement {
@@ -113,6 +116,53 @@ public class UserManager extends NationsManagement {
 			}
 		}
 		return null;
+	}
+
+	public boolean updateLocation(User user) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		Location playerLoc = nations.getServer().getPlayerExact(user.getName()).getLocation();
+		String locKey = nations.plotManager.getLocationKey(playerLoc);
+		
+		if (!user.getLocationKey().equals(locKey)) {
+			this.updateLocationDescription(user, playerLoc);
+			user.setLocationKey(locKey);
+			return true;
+		}
+
+		return false;
+	}
+	
+	public synchronized boolean updateLocationDescription(User user, Location loc) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		Plot plot = nations.plotManager.getPlotByLocation(loc);
+		
+		if (plot != null) {
+			if (!user.getLocationDescription().equals(plot.getLocationDescription())) {
+				user.setLocationDescription(plot.getLocationDescription());
+				this.message(user, ChatColor.AQUA + "[Entering] " + plot.getLocationDescription());
+				return true;
+			}
+		} else {
+			if (user.getLocationDescription() != "") {
+				this.message(user, ChatColor.AQUA + "[Leaving] " + user.getLocationDescription());
+				user.setLocationDescription("");
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void message(User user, String string) {
+		Player player = plugin.getServer().getPlayerExact(user.getName());
+		player.sendMessage(string);
 	}
 
 }

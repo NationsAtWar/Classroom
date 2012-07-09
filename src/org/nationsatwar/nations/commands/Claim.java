@@ -1,5 +1,6 @@
 package org.nationsatwar.nations.commands;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
@@ -42,14 +43,17 @@ public class Claim extends NationsCommand {
 			return;			
 		}
 		
-		Plot plot = nations.plotManager.getPlotByLocation(plugin.getServer().getPlayer(user.getName()).getLocation());
+		Location userLoc = plugin.getServer().getPlayer(user.getName()).getLocation();
+		
+		Plot plot = nations.plotManager.getPlotByLocation(userLoc);
 		
 		if(plot != null) {
 			this.errorText(commandSender, "This plot is already owned.", null);
 			return;			
 		}
 		
-		plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation());
+		plot = null;
+		plot = nations.plotManager.createPlot(userLoc, nation, town);
 		if(plot == null) {
 			this.errorText(commandSender, "Couldn't create plot.", null);
 			return;			

@@ -29,7 +29,7 @@ public class InviteCommand extends NationsCommand {
 				this.helpText(commandSender, "i.e. '/invite player [player name]", "invites a player to your nation.");
 				return;
 			}
-			// -invite [String: userName]
+			// -invite player [String: userName]
 			
 			User inviter = user;
 			User invitee = nations.userManager.findUser(command[1]);
