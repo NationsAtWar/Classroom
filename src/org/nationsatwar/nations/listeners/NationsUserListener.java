@@ -1,4 +1,4 @@
-package org.nationsatwar.listeners;
+package org.nationsatwar.nations.listeners;
 
 import java.util.logging.Level;
 import org.bukkit.entity.Player;
@@ -44,7 +44,12 @@ public class NationsUserListener implements Listener {
 			return;
 		}
 		Nations nations = (Nations) plugin;
+		
 		Player player = event.getPlayer();
+		if(player == null) {
+			return;
+		}
+		
 		if(nations.userManager.getUserList().contains(player.getName())) {
 			User user = nations.userManager.getUserByPlayer(player);
 			if(user != null) {

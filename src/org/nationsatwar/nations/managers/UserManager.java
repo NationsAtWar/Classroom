@@ -127,7 +127,7 @@ public class UserManager extends NationsManagement {
 		Location playerLoc = nations.getServer().getPlayerExact(user.getName()).getLocation();
 		String locKey = nations.plotManager.getLocationKey(playerLoc);
 		
-		if (!user.getLocationKey().equals(locKey)) {
+		if (user.getLocationKey() == null || !user.getLocationKey().equals(locKey)) {
 			this.updateLocationDescription(user, playerLoc);
 			user.setLocationKey(locKey);
 			return true;

@@ -1,4 +1,4 @@
-package org.nationsatwar.listeners;
+package org.nationsatwar.nations.listeners;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

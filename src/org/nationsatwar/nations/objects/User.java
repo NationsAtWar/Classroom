@@ -3,7 +3,7 @@ package org.nationsatwar.nations.objects;
 public class User extends NationsObject {
 	private String name;
 	private String locationKey;
-	private String locationDescription;
+	private String locationDescription = "";
 	
 	public User() {
 		super(-1);
