@@ -2,6 +2,8 @@ package org.nationsatwar.nations.objects;
 
 public class User extends NationsObject {
 	private String name;
+	private String locationKey;
+	private String locationDescription;
 	
 	public User() {
 		super(-1);
@@ -19,5 +21,21 @@ public class User extends NationsObject {
 	
 	public String getName() {
 		return this.name;
+	}
+
+	public String getLocationKey() {
+		return locationKey;
+	}
+
+	public void setLocationKey(String locationKey) {
+		this.locationKey = locationKey;
+	}
+
+	public String getLocationDescription() {
+		return locationDescription;
+	}
+
+	public void setLocationDescription(String locationDescription) {
+		this.locationDescription = locationDescription;
 	}
 }

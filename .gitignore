@@ -34,3 +34,5 @@ local.properties
 *.jar
 *.war
 *.ear
+
+dist/**

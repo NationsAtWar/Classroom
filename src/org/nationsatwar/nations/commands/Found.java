@@ -147,7 +147,7 @@ public class Found extends NationsCommand {
 							this.successText(commandSender, null, "Added you as a founder of "+town.getName());
 						}
 						
-						Plot plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation());
+						Plot plot = nations.plotManager.createPlot(plugin.getServer().getPlayer(user.getName()).getLocation(), nation, town);
 						if(plot == null) {
 							this.errorText(commandSender, "Couldn't create plot.", null);
 						}

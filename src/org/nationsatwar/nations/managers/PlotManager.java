@@ -8,8 +8,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Plot;
+import org.nationsatwar.nations.objects.Town;
 
 public class PlotManager extends NationsManagement {
 	private HashMap<Integer, Plot> plotMap = new HashMap<Integer, Plot>();
@@ -26,7 +28,7 @@ public class PlotManager extends NationsManagement {
 		Nations nations = (Nations) plugin;
 		
 		plotMap.clear();
-		for (NationsObject obj : nations.database.gatherDataset(new Plot(0, null))) {
+		for (NationsObject obj : nations.database.gatherDataset(new Plot(0, null, null, null))) {
 			Plot plot = (Plot) obj;
 			if (!plotMap.containsKey(plot.getID()))
 				plotMap.put(plot.getID(), plot);
@@ -70,14 +72,14 @@ public class PlotManager extends NationsManagement {
 		world.getBlockAt((x * 16) + 15, world.getHighestBlockYAt((x * 16) + 15, (z * 16) + 15), (z * 16) + 15).setTypeId(id);
 	}
 	
-	public Plot createPlot(Location loc) {
+	public Plot createPlot(Location loc, Nation nation, Town town) {
 		int newKey = 0; 
 		try {
 			newKey = Collections.max(plotMap.keySet())+1;
 		} catch(NoSuchElementException e) {
 			
 		}
-		Plot newPlot = new Plot(newKey, loc);
+		Plot newPlot = new Plot(newKey, loc, nation, town);
 		if(this.addPlot(newPlot)) {
 			return newPlot;
 		}
@@ -105,8 +107,8 @@ public class PlotManager extends NationsManagement {
 		return null;
 	}
 	
-	private String getLocationKey(Location location) {
-		return location.getWorld()+";"+location.getChunk().getX()+";"+location.getChunk().getZ();
+	public String getLocationKey(Location location) {
+		return location.getWorld().getName()+";"+location.getChunk().getX()+";"+location.getChunk().getZ();
 	}
 
 	public Plot getPlotByID(int key) {

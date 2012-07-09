@@ -3,6 +3,7 @@ package org.nationsatwar.nations.commands;
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
+import org.nationsatwar.nations.objects.Town;
 
 public class Leave extends NationsCommand {
 
@@ -44,6 +45,43 @@ public class Leave extends NationsCommand {
 				this.successText(commandSender, null, "Removed you from "+nation.getName());
 			} else {
 				this.errorText(commandSender, "Couldn't remove you from the nation.", null);
+			}
+			
+			return;
+		}
+		
+		// -leave town
+		if(command[0].equalsIgnoreCase("town")) {
+			if(command.length == 2 && command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/leave town", "Leaves the town you're in.");
+				return;
+			}
+			
+			if(!(plugin instanceof Nations)) {
+				return;
+			}
+			Nations nations = (Nations) plugin;
+			
+			Nation nation = nations.nationManager.getNationByUserID(user.getID());
+			if(user != null) {
+				if(nation == null) {
+					this.errorText(commandSender, null, "You aren't in a nation!");
+					return;						
+				}
+			}
+			
+			Town town = nations.townManager.getTownByUserID(user.getID());
+			if(user != null) {
+				if(town == null) {
+					this.errorText(commandSender, null, "You aren't in a town!");
+					return;
+				}
+			}
+			
+			if(town.removeMember(user)) {
+				this.successText(commandSender, null, "Removed you from "+town.getName());
+			} else {
+				this.errorText(commandSender, "Couldn't remove you from the town.", null);
 			}
 			
 			return;

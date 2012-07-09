@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.User;
@@ -35,7 +36,21 @@ public class NationsUserListener implements Listener {
 				}
 			}
 		}
-		
+	}
+	
+	@EventHandler
+	public synchronized void onPlayerMove(PlayerMoveEvent event) {
+		if(!(plugin instanceof Nations)) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
+		Player player = event.getPlayer();
+		if(nations.userManager.getUserList().contains(player.getName())) {
+			User user = nations.userManager.getUserByPlayer(player);
+			if(user != null) {
+				nations.userManager.updateLocation(user);
+			}
+		}
 	}
 
 }
