@@ -17,7 +17,9 @@ public class Town extends NationsObject {
 	public Town(int newID, Nation newNation, String name) {
 		super(newID);
 		this.name = name;
-		this.nation = newNation.getID();
+		if(newNation != null) {
+			this.nation = newNation.getID();
+		}
 	}
 
 	public String getName() {

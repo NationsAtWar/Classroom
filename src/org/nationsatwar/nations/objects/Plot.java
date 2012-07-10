@@ -22,7 +22,7 @@ public class Plot extends NationsObject {
 		}
 		if(nation != null || town != null) {
 			this.locationDescription = nation.getName()+";"+town.getName();
-			this.setTown(town.getID());
+			this.setTownID(town.getID());
 		}
 	}
 

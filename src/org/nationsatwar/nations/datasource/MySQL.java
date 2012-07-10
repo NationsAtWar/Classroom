@@ -18,6 +18,7 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.NationsManagement;
 import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Rank.RankType;
@@ -104,19 +105,19 @@ public class MySQL extends DataSource {
 		}
 		if(nations.nationManager != null) {
 			this.createTable(dbm, state, TABLE_PREFIX+"nation", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  PRIMARY KEY (`id`))");
-			this.createTable(dbm, state, TABLE_PREFIX+"nation_customranks", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
+			this.createTable(dbm, state, TABLE_PREFIX+"nation_customRanks", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
 			this.createTable(dbm, state, TABLE_PREFIX+"nation_members", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_idx` int(11) NOT NULL COMMENT 'userid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid',  UNIQUE KEY `_idx` (`_idx`)");
 			this.createTable(dbm, state, TABLE_PREFIX+"nation_towns", "(`id` int(11) NOT NULL COMMENT 'nationid',  `_item` int(11) NOT NULL COMMENT 'townid',  `_idx` int(11) DEFAULT NULL COMMENT 'nationOrder',  UNIQUE KEY `_item` (`_item`))");	
 		}
 		if(nations.plotManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"plot", "(`id` int(11) NOT NULL,  `world` varchar(40) NOT NULL,  `x` int(11) NOT NULL,  `z` int(11) NOT NULL, `locationDescription` varchar(80) NOT NULL DEFAULT '', PRIMARY KEY (`id`)))");
+			this.createTable(dbm, state, TABLE_PREFIX+"plot", "(`id` int(11) NOT NULL,  `world` varchar(40) NOT NULL,  `x` int(11) NOT NULL,  `z` int(11) NOT NULL, `locationDescription` varchar(80) NOT NULL DEFAULT '', `town` int(11) NOT NULL, PRIMARY KEY (`id`)))");
 		}
 		if(nations.rankManager != null) {
 			this.createTable(dbm, state, TABLE_PREFIX+"rank", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  `type` varchar(40) NOT NULL,  PRIMARY KEY (`id`)");
 		}
 		if(nations.townManager != null) {
-			this.createTable(dbm, state, TABLE_PREFIX+"town", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL,  PRIMARY KEY (`id`)");
-			this.createTable(dbm, state, TABLE_PREFIX+"town_customranks", "(`id` int(11) NOT NULL COMMENT 'townid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
+			this.createTable(dbm, state, TABLE_PREFIX+"town", "(`id` int(11) NOT NULL,  `name` varchar(40) NOT NULL, `nation` int(11) NOT NULL,  PRIMARY KEY (`id`)");
+			this.createTable(dbm, state, TABLE_PREFIX+"town_customRanks", "(`id` int(11) NOT NULL COMMENT 'townid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid')");
 			this.createTable(dbm, state, TABLE_PREFIX+"town_members", "(`id` int(11) NOT NULL COMMENT 'townid',  `_idx` int(11) NOT NULL COMMENT 'userid',  `_item` varchar(40) NOT NULL DEFAULT '' COMMENT 'rankid',  UNIQUE KEY `_idx` (`_idx`)");
 			this.createTable(dbm, state, TABLE_PREFIX+"town_plots", "(`id` int(11) NOT NULL COMMENT 'townid',  `_item` int(11) NOT NULL COMMENT 'plotid',  `_idx` int(11) DEFAULT NULL,  UNIQUE KEY `_item` (`_item`))");	
 		}
@@ -313,12 +314,24 @@ public class MySQL extends DataSource {
 		return 0;
 	}
 	
-	public boolean saveAll(NationsManagement manager, HashMap<Integer, NationsObject> idMap) {
+	/*public boolean saveAll(NationsManagement manager, String objtype) {
+		Connection conn = this.getConnection();
+		if(conn == null) {
+			return false;
+		}
 		
+		String table = TABLE_PREFIX + objtype;
+		
+		if(manager instanceof NationManager) {
+			NationManager typeManager = (NationManager) manager;
+			typeManager.getNations();
+			conn.setAutoCommit(false);
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO ")
+		}
 		
 		
 		return false;
-	}
+	}*/
 	
 
 	@Override
