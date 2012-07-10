@@ -8,14 +8,16 @@ public class Town extends NationsObject {
 	private ArrayList<Integer> plots = new ArrayList<Integer>();
 	private HashMap<Integer, Integer> members = new HashMap<Integer, Integer>();
 	private ArrayList<Integer> customRanks = new ArrayList<Integer>();
+	private Integer nation;
 	
 	public Town() {
 		super(-1);
 	}
 	
-	public Town(int newID, String name) {
+	public Town(int newID, Nation newNation, String name) {
 		super(newID);
 		this.name = name;
+		this.nation = newNation.getID();
 	}
 
 	public String getName() {
@@ -77,5 +79,17 @@ public class Town extends NationsObject {
 
 	public ArrayList<Integer> getPlots() {
 		return this.plots;
+	}
+	
+	public int getNation() {
+		return this.nation;
+	}
+	
+	public boolean setNation(int newNation) {
+		if(this.nation != newNation) {
+			this.nation = newNation;
+			return true;
+		}
+		return false;
 	}
 }

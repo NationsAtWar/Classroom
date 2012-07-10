@@ -7,6 +7,7 @@ public class Plot extends NationsObject {
 	public int x = -1;
 	public int z = -1;
 	private String locationDescription;
+	private int town;
 	
 	public Plot() {
 		super(-1);
@@ -21,6 +22,7 @@ public class Plot extends NationsObject {
 		}
 		if(nation != null || town != null) {
 			this.locationDescription = nation.getName()+";"+town.getName();
+			this.setTown(town.getID());
 		}
 	}
 
@@ -51,6 +53,14 @@ public class Plot extends NationsObject {
 			return "Nation: "+nation+" Town: "+town;
 		}
 		return this.locationDescription;
+	}
+
+	public int getTown() {
+		return town;
+	}
+
+	public void setTown(int town) {
+		this.town = town;
 	}
 
 }

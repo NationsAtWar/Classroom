@@ -135,12 +135,12 @@ public class Found extends NationsCommand {
 			if(nation != null) {
 				if(nations.townManager.getTownByUserID(user.getID()) == null) {
 				
-					Town town = nations.townManager.createTown(townName);
+					Town town = nations.townManager.createTown(nation, townName);
 					if(town == null ) {
 						this.errorText(commandSender, "Couldn't create town.", null);
 						return;
 					} else {
-						nations.notifyAll(townName + " created!");
+						nations.notifyAll("Town: " + townName + " created!");
 					}
 					if(user != null) {							
 						if(town.addMember(user, nations.rankManager.getFounderRank())) {
@@ -154,9 +154,6 @@ public class Found extends NationsCommand {
 						
 						if(!town.addPlot(plot)) {
 							this.errorText(commandSender, "Error assigning plot to town.", null);
-						}
-						if(!nation.addTown(town)) {
-							this.errorText(commandSender, "Error assigning town to nation.", null);
 						}
 						nations.plotManager.showBoundaries(plot);
 						this.successText(commandSender, null, "You now own this plot.");

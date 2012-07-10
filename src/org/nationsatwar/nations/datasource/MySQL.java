@@ -18,6 +18,7 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.managers.NationsManagement;
 import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Rank.RankType;
 
@@ -173,6 +174,7 @@ public class MySQL extends DataSource {
 				map.put("x", ColumnType.INT);
 				map.put("z", ColumnType.INT);
 				map.put("locationDescription", ColumnType.STRING);
+				map.put("town", ColumnType.INT);
 			} else if (objtype.equals("rank")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);
@@ -183,6 +185,7 @@ public class MySQL extends DataSource {
 				map.put("customRanks", ColumnType.INT_LIST);
 				map.put("members", ColumnType.HASHMAP_INT_INT);
 				map.put("plots", ColumnType.INT_LIST);
+				map.put("nation", ColumnType.INT);
 			} else if (objtype.equals("user")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);
@@ -309,6 +312,14 @@ public class MySQL extends DataSource {
 		}
 		return 0;
 	}
+	
+	public boolean saveAll(NationsManagement manager, HashMap<Integer, NationsObject> idMap) {
+		
+		
+		
+		return false;
+	}
+	
 
 	@Override
 	public boolean save(NationsObject obj) {

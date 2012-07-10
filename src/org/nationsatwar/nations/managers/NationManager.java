@@ -110,4 +110,8 @@ public class NationManager extends NationsManagement {
 	public HashMap<Integer, Nation> getNations() {
 		return this.nationMap;
 	}
+
+	public Nation getNationById(int nation) {
+		return this.nationMap.get(nation);
+	}
 }

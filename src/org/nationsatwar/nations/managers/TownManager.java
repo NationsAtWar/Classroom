@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Town;
 
@@ -24,7 +25,7 @@ public class TownManager extends NationsManagement {
 		Nations nations = (Nations) plugin;
 		
 		townMap.clear();
-		for (NationsObject obj : nations.database.gatherDataset(new Town(0, null))) {
+		for (NationsObject obj : nations.database.gatherDataset(new Town(0, null, null))) {
 			Town object = (Town) obj;
 			if (!townMap.containsKey(object.getID()))
 				townMap.put(object.getID(), object);
@@ -56,15 +57,15 @@ public class TownManager extends NationsManagement {
 		townMap.clear();
 	}
 	
-	public Town createTown(String name) {
+	public Town createTown(Nation nation, String name) {
 		int newKey = 0; 
 		try {
 			newKey = Collections.max(townMap.keySet())+1;
 		} catch(NoSuchElementException e) {
 			
 		}
-		Town newTown = new Town(newKey, name);
-		if(this.addTown(newTown)) {
+		Town newTown = new Town(newKey, nation, name);
+		if(this.addTown(newTown) && nation.addTown(newTown)) {
 			return newTown;
 		}
 		return null;
