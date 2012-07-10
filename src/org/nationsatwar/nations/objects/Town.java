@@ -8,7 +8,7 @@ public class Town extends NationsObject {
 	private ArrayList<Integer> plots = new ArrayList<Integer>();
 	private HashMap<Integer, Integer> members = new HashMap<Integer, Integer>();
 	private ArrayList<Integer> customRanks = new ArrayList<Integer>();
-	private Integer nation;
+	private int nation;
 	
 	public Town() {
 		super(-1);

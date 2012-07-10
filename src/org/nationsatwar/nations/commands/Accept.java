@@ -85,7 +85,7 @@ public class Accept extends NationsCommand {
 					if(town != null) {
 						town.removeMember(user);
 					}
-					if(nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank())) {
+					if(nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank()) && nations.townManager.getTownByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank())) {
 						this.successText(commandSender, "You've accepted your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
 					}
 					return;

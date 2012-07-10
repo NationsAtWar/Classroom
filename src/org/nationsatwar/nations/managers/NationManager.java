@@ -111,7 +111,7 @@ public class NationManager extends NationsManagement {
 		return this.nationMap;
 	}
 
-	public Nation getNationById(int nation) {
+	public Nation getNationByID(int nation) {
 		return this.nationMap.get(nation);
 	}
 }

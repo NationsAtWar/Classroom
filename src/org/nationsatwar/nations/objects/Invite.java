@@ -2,8 +2,8 @@ package org.nationsatwar.nations.objects;
 
 public class Invite extends NationsObject {
 	private InviteType type;
-	private Integer invitee;
-	private Integer inviter;
+	private int invitee;
+	private int inviter;
 	
 	public Invite() {
 		super(-1);
