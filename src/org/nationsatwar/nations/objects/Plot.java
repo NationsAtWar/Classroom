@@ -55,11 +55,11 @@ public class Plot extends NationsObject {
 		return this.locationDescription;
 	}
 
-	public int getTown() {
+	public int getTownID() {
 		return town;
 	}
 
-	public void setTown(int town) {
+	public void setTownID(int town) {
 		this.town = town;
 	}
 

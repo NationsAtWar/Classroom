@@ -81,11 +81,11 @@ public class Town extends NationsObject {
 		return this.plots;
 	}
 	
-	public int getNation() {
+	public int getNationID() {
 		return this.nation;
 	}
 	
-	public boolean setNation(int newNation) {
+	public boolean setNationID(int newNation) {
 		if(this.nation != newNation) {
 			this.nation = newNation;
 			return true;
