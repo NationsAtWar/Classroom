@@ -7,6 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.nationsatwar.nations.commands.CommandManager;
 import org.nationsatwar.nations.datasource.DataSource;
 import org.nationsatwar.nations.datasource.MySQL;
+import org.nationsatwar.nations.listeners.NationsBlockListener;
 import org.nationsatwar.nations.listeners.NationsUserListener;
 import org.nationsatwar.nations.managers.InviteManager;
 import org.nationsatwar.nations.managers.NationManager;
@@ -34,6 +35,8 @@ public class Nations extends JavaPlugin {
 	public void onEnable() {
 		
 		new NationsUserListener(this);
+		new NationsBlockListener(this);
+		
 		this.getConfig().options().copyDefaults(true);
 		
 		if(this.getConfig().getBoolean("datasource.use_mysql"))

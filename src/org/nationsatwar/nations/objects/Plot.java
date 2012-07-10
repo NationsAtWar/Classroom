@@ -19,7 +19,7 @@ public class Plot extends NationsObject {
 			this.z = location.getChunk().getZ();
 			this.world = location.getWorld().getName();
 		}
-		if(nation != null && town != null) {
+		if(nation != null || town != null) {
 			this.locationDescription = nation.getName()+";"+town.getName();
 		}
 	}
@@ -45,11 +45,12 @@ public class Plot extends NationsObject {
 		String town = "";
 		
 		String[] description = this.locationDescription.split(";");
-		if(description.length > 2) {
+		if(description.length > 1) {
 			nation = description[0];
 			town = description[1];
+			return "Nation: "+nation+" Town: "+town;
 		}
-		return "Nation: "+nation+" Town: "+town;
+		return this.locationDescription;
 	}
 
 }

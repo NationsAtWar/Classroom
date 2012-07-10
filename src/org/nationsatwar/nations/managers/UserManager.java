@@ -145,9 +145,10 @@ public class UserManager extends NationsManagement {
 		Plot plot = nations.plotManager.getPlotByLocation(loc);
 		
 		if (plot != null) {
-			if (!user.getLocationDescription().equals(plot.getLocationDescription())) {
-				user.setLocationDescription(plot.getLocationDescription());
-				this.message(user, ChatColor.AQUA + "[Entering] " + plot.getLocationDescription());
+			String locdesc = plot.getLocationDescription();
+			if (!user.getLocationDescription().equals(locdesc)) {
+				user.setLocationDescription(locdesc);
+				this.message(user, ChatColor.AQUA + "[Entering] " + locdesc);
 				return true;
 			}
 		} else {
