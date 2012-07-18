@@ -43,7 +43,7 @@ public class Leave extends NationsCommand {
 			
 			if(nation.removeMember(user)) {
 				this.successText(commandSender, null, "Removed you from "+nation.getName());
-				if(nation.getMembers(null) == null) {
+				if(nation.getMembers(null) == null || nation.getMembers(null).isEmpty()) {
 					if(nations.nationManager.delete(nation)) {
 						nations.notifyAll("The nation of " + nation.getName() + " was lost to the sands of time!");
 					}
@@ -84,7 +84,7 @@ public class Leave extends NationsCommand {
 			}
 			
 			if(town.removeMember(user)) {
-				if(town.getMembers(null) == null) {
+				if(town.getMembers(null) == null || town.getMembers(null).isEmpty()) {
 					if(nations.townManager.delete(town)) {
 						nations.notifyAll("The town of " + nation.getName() + " was lost to the sands of time!");
 					}
