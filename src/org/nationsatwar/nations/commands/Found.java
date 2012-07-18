@@ -72,7 +72,7 @@ public class Found extends NationsCommand {
 			}
 			Nation nation = nations.nationManager.createNation(nationName);
 			if(nation != null) {
-				nations.notifyAll(nationName + " created!");
+				nations.notifyAll("Nation: " + nationName + " created!");
 			} else {
 				this.errorText(commandSender, "Couldn't create nation.", null);
 				return;

@@ -115,4 +115,20 @@ public class PlotManager extends NationsManagement {
 		return this.plotMap.get(key);
 	}
 
+	public boolean delete(Plot plot) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		if(this.plotMap.containsKey(plot.getID())) {
+			if(this.plotMap.remove(plot.getID()) != null) {
+				nations.database.delete(plot);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }

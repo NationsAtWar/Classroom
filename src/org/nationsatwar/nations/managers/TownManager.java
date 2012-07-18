@@ -8,6 +8,7 @@ import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.NationsObject;
+import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
 
 public class TownManager extends NationsManagement {
@@ -122,5 +123,26 @@ public class TownManager extends NationsManagement {
 
 	public HashMap<Integer, Town> getTowns() {
 		return this.townMap;
+	}
+
+	public boolean delete(Town town) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		if(this.townMap.containsKey(town.getID())) {
+			for(int plotID : town.getPlots()) {
+				Plot plot = nations.plotManager.getPlotByID(plotID);
+				if(plot != null) {
+					nations.plotManager.delete(plot);
+				}
+			}
+			if(this.townMap.remove(town.getID()) != null) {
+				nations.database.delete(town);
+				return true;
+			}
+		}
+		return false;
 	}
 }
