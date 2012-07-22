@@ -1,5 +1,7 @@
 package org.nationsatwar.nations.listeners;
 
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -93,7 +95,28 @@ public class NationsBlockListener implements Listener {
 		Plot plot = plugin.plotManager.getPlotByLocation(event.getBlock().getLocation());
 		if(!this.canInteract(plot, user)) {
 			event.setCancelled(true);
-		}		
+		}
+		
+		//Don't allow chest placement in unowned areas.
+		if(event.getBlockPlaced().getType() == Material.BED || 
+				event.getBlockPlaced().getType() == Material.BED_BLOCK) {
+			if(plot == null) { //Interaction and therefore plot ownership is implied by the above check.
+				event.getPlayer().sendMessage(ChatColor.RED + "You can only place beds in your plots.");
+				event.setCancelled(true);
+			}
+			
+			if(plugin instanceof Nations) {
+				return;
+			}
+			Nations nations = (Nations) plugin;
+			Town newTown = nations.townManager.getTownByID(plot.getTownID());
+			Town oldTown = nations.townManager.getTownByUserID(user.getID());
+			if(newTown.getID() != oldTown.getID()) {
+				//Moving towns
+				oldTown.removeMember(user);
+				newTown.addMember(user, nations.rankManager.getRecruitRank());
+			}
+		}
 	}
 	
 	@EventHandler
