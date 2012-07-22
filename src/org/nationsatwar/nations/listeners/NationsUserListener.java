@@ -6,15 +6,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Plot;
+import org.nationsatwar.nations.objects.Town;
 import org.nationsatwar.nations.objects.User;
 
 public class NationsUserListener implements Listener {
 	
-	private PluginBase plugin;
+	private Nations plugin;
 
-	public NationsUserListener(PluginBase instance) {
+	public NationsUserListener(Nations instance) {
 		plugin = instance;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -54,6 +58,22 @@ public class NationsUserListener implements Listener {
 			User user = nations.userManager.getUserByPlayer(player);
 			if(user != null) {
 				nations.userManager.updateLocation(user);
+			}
+		}
+	}
+	
+	@EventHandler
+	public synchronized void onPlayerTeleport(PlayerTeleportEvent event) {
+	//Blocks enderpearl teleporting in nations that are not your own.
+		User user = plugin.userManager.getUserByPlayer(event.getPlayer());
+		Plot plot = plugin.plotManager.getPlotByLocation(event.getTo().getBlock().getLocation());
+		
+		if(event.getCause()==TeleportCause.ENDER_PEARL) {
+			if(plot != null && user != null) {
+				Town plotNation = plugin.townManager.getTownByID(plot.getTownID());
+				if(plotNation.getID() != plugin.nationManager.getNationByUserID(user.getID()).getID()) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
