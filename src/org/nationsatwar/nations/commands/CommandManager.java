@@ -39,20 +39,16 @@ public class CommandManager {
 			}
 		}
 		
-		if(commandLabel.equalsIgnoreCase("found")) {
-			new Found(sender, commandLabel, args).run();
+		if(commandLabel.equalsIgnoreCase("nation")) {
+			new NationCommand(sender, commandLabel, args).run();
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("leave")) {
-			new Leave(sender, commandLabel, args).run();
+		if(commandLabel.equalsIgnoreCase("town")) {
+			new TownCommand(sender, commandLabel, args).run();
 			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("world")) {
 			new World(sender, commandLabel, args).run();
-			return true;
-		}
-		if(commandLabel.equalsIgnoreCase("invite")) {
-			new InviteCommand(sender, commandLabel, args).run();
 			return true;
 		}
 		if(commandLabel.equalsIgnoreCase("claim")) {
