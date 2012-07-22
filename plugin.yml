@@ -28,6 +28,10 @@ commands:
     description: Claims land for your nation.
     usage: /claim
     permission: nationsatwar.nations.player
+  raze:
+    description: Razes a plot of land.
+    usage: /raze
+    permission: nationsatwar.nations.player
   nation:
     description: Nation manipulation commands
     usage: /nation
@@ -36,6 +40,10 @@ commands:
     description: Town manipulation commands
     usage: /town
     permission: nationsatwar.nations.player
+  nadmin:
+    description: Admin manipulation commands
+    usage: /nadmin
+    permission: nationsatwar.nations.admin
 
 permissions:
     nationsatwar.nations.player:

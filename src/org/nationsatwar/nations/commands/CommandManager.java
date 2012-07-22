@@ -55,11 +55,18 @@ public class CommandManager {
 			new Claim(sender, commandLabel, args).run();
 			return true;
 		}
+		if(commandLabel.equalsIgnoreCase("raze")) {
+			new Raze(sender, commandLabel, args).run();
+			return true;
+		}
 		if(commandLabel.equalsIgnoreCase("accept")) {
 			new Accept(sender, commandLabel, args).run();
 			return true;
 		}
-		
+		if(commandLabel.equalsIgnoreCase("nadmin")) {
+			new AdminCommand(sender, commandLabel, args).run();
+			return true;
+		}
 		/*if(commandLabel.equalsIgnoreCase("nations")) {
 			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
 				if(plugin instanceof Nations){

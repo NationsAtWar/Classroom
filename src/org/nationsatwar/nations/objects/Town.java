@@ -29,14 +29,6 @@ public class Town extends NationsObject {
 	public void setName(String newname) {
 		name = newname;
 	}
-	
-	public boolean addPlot(Plot plot) {
-		if(!this.plots.contains(plot.getID())) {
-			this.plots.add(plot.getID());
-			return true;
-		}
-		return false;
-	}
 
 	public ArrayList<Integer> getMembers(Rank rank) {
 		if(rank == null) {
@@ -90,6 +82,22 @@ public class Town extends NationsObject {
 	public boolean setNationID(int newNation) {
 		if(this.nation != newNation) {
 			this.nation = newNation;
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean addPlot(Plot plot) {
+		if(!this.plots.contains(plot.getID())) {
+			this.plots.add(plot.getID());
+			return true;
+		}
+		return false;
+	}
+
+	public boolean removePlot(Plot plot) {
+		if(this.plots.contains(plot.getID())) {
+			this.plots.remove(plot.getID());
 			return true;
 		}
 		return false;
