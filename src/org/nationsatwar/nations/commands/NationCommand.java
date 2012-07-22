@@ -18,7 +18,7 @@ public class NationCommand extends NationsCommand {
 		
 		// -nation || nation help
 		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
-			this.helpText(commandSender, "i.e. '/nation [found|invite|leave]", "Nation manipulation commands. Use /nation [subcommand] for more help.");
+			this.helpText(commandSender, "i.e. '/nation [found|invite|leave|founder]", "Nation manipulation commands. Use /nation [subcommand] for more help.");
 			return;
 		}
 		
@@ -145,6 +145,54 @@ public class NationCommand extends NationsCommand {
 			}
 			
 			return;
+		}
+		
+		// -nation founder
+		if(command[0].equalsIgnoreCase("founder")) {
+			if(command.length == 2 && command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nation founder [player name]", "Takes your founder status away and gives it to the player specified.");
+				return;
+			}
+			
+			if(user == null) {
+				this.errorText(commandSender, "No user found.", null);
+				return;
+			}
+			
+			if(!(plugin instanceof Nations)) {
+				return;
+			}
+			Nations nations = (Nations) plugin;
+			
+			Nation nation = nations.nationManager.getNationByUserID(user.getID());
+			if(user != null) {
+				if(nation == null) {
+					this.errorText(commandSender, null, "You aren't in a nation!");
+					return;						
+				}
+			}
+			
+			String newFounderName = this.connectStrings(command, 2, command.length);
+			User newFounder = nations.userManager.getUserByName(newFounderName);
+			
+			if(newFounder == null) {
+				this.errorText(commandSender, null, "The user you specified is not valid.");
+				return;
+			}
+			if(nation.getID() != nations.nationManager.getNationByUserID(newFounder.getID()).getID()) {
+				this.errorText(commandSender, null, "The user you specified is not a member of your Nation.");
+				return;
+			}
+			
+			if(nation.setRank(newFounder, nations.rankManager.getFounderRank()) &&
+			nation.setRank(user, nations.rankManager.getRecruitRank())) {
+				this.successText(commandSender, "Successfully transferred ownership.", null);
+				return;
+			} else {
+				this.errorText(commandSender, null, "Something prevented you from transferring ownership.");
+				return;
+			}
+			
 		}
 
 	}

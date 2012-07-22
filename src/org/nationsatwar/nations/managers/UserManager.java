@@ -166,4 +166,13 @@ public class UserManager extends NationsManagement {
 		player.sendMessage(string);
 	}
 
+	public User getUserByName(String newFounderName) {
+		for(User user : this.userMap.values()) {
+			if(user.getName().equalsIgnoreCase(newFounderName)) {
+				return user;
+			}
+		}
+		return null;
+	}
+
 }

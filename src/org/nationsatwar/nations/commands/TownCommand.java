@@ -5,6 +5,7 @@ import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
+import org.nationsatwar.nations.objects.User;
 
 public class TownCommand extends NationsCommand {
 
@@ -18,7 +19,7 @@ public class TownCommand extends NationsCommand {
 		
 		// -town || town help
 		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
-			this.helpText(commandSender, "i.e. '/town [found|leave]", "Town manipulation commands. Use /town [subcommand] for more help.");
+			this.helpText(commandSender, "i.e. '/town [found|leave|founder]", "Town manipulation commands. Use /town [subcommand] for more help.");
 			return;
 		}
 		
@@ -147,6 +148,62 @@ public class TownCommand extends NationsCommand {
 			}
 			
 			return;
+		}
+		
+		// -town founder
+		if(command[0].equalsIgnoreCase("founder")) {
+			if(command.length == 2 && command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/town founder [player name]", "Takes your founder status away and gives it to the player specified.");
+				return;
+			}
+			
+			if(user == null) {
+				this.errorText(commandSender, "No user found.", null);
+				return;
+			}
+			
+			if(!(plugin instanceof Nations)) {
+				return;
+			}
+			Nations nations = (Nations) plugin;
+			
+			Nation nation = nations.nationManager.getNationByUserID(user.getID());
+			if(user != null) {
+				if(nation == null) {
+					this.errorText(commandSender, null, "You aren't in a nation!");
+					return;						
+				}
+			}
+			
+			Town town = nations.townManager.getTownByUserID(user.getID());
+			if(user != null) {
+				if(town == null) {
+					this.errorText(commandSender, null, "You aren't in a town!");
+					return;
+				}
+			}
+			
+			String newFounderName = this.connectStrings(command, 2, command.length);
+			User newFounder = nations.userManager.getUserByName(newFounderName);
+			
+			if(newFounder == null) {
+				this.errorText(commandSender, null, "The user you specified is not valid.");
+				return;
+			}
+			if(town.getID() != nations.townManager.getTownByUserID(newFounder.getID()).getID()) {
+				this.errorText(commandSender, null, "The user you specified is not a member of your town.");
+				return;
+			}
+			
+			if(town.setRank(newFounder, nations.rankManager.getFounderRank()) &&
+			town.setRank(user, nations.rankManager.getRecruitRank())) {
+				this.successText(commandSender, "Successfully transferred ownership.", null);
+				return;
+			} else {
+				this.errorText(commandSender, null, "Something prevented you from transferring ownership.");
+				return;
+			}
+			
 		}
 	}
 }
