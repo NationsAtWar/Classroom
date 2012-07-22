@@ -9,6 +9,7 @@ import org.nationsatwar.nations.datasource.DataSource;
 import org.nationsatwar.nations.datasource.MySQL;
 import org.nationsatwar.nations.listeners.NationsBlockListener;
 import org.nationsatwar.nations.listeners.NationsUserListener;
+import org.nationsatwar.nations.managers.AllianceManager;
 import org.nationsatwar.nations.managers.InviteManager;
 import org.nationsatwar.nations.managers.NationManager;
 import org.nationsatwar.nations.managers.PlotManager;
@@ -21,6 +22,7 @@ public class Nations extends JavaPlugin {
 
 	public NationManager 	nationManager 	= new NationManager(this);
 	public TownManager		townManager		= new TownManager(this);
+	public AllianceManager 	allianceManager 	= new AllianceManager(this);
 	public PlotManager		plotManager		= new PlotManager(this);
 	public UserManager		userManager		= new UserManager(this);
 	public InviteManager	inviteManager	= new InviteManager(this);
