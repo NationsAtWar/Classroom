@@ -65,12 +65,14 @@ public class Claim extends NationsCommand {
 		}
 		
 		//Doughnut protection
+		/*
 		int connPlots = this.connectedPlots(town.getID(), userLoc.getWorld(), userLoc.getChunk().getX(), userLoc.getChunk().getZ(), userLoc.getChunk().getX(), userLoc.getChunk().getZ());
 		int surrPlots = this.surroundingPlots(town.getID(), userLoc.getWorld(), userLoc.getChunk().getX(), userLoc.getChunk().getZ());
 		if(connPlots < surrPlots) {
 			this.errorText(commandSender, "You may not claim this plot as it results in a poor configuration.", null);
 			return;	
 		}
+		*/
 		
 		plot = null;
 		plot = nations.plotManager.createPlot(userLoc, nation, town);
@@ -96,21 +98,23 @@ public class Claim extends NationsCommand {
 		}
 		Nations nations = (Nations) plugin;
 		
-		//We're checking each plot in a 3x3 for existence
-		Plot checkPlot = nations.plotManager.getPlotByChunkCoords(world, plotX, plotZ);
-		
 		//Only check within the original 3x3 bounds.
-		if(plotX > origX +1 || plotX < origX -1) {
+		if(plotX > origX + 1 || plotX < origX - 1) {
 			return found;
 		}
 		if(plotZ > origZ + 1 || plotZ < origZ - 1) {
 			return found;
 		}
 		
+		//We're checking each plot in a 3x3 for existence
+		Plot checkPlot = nations.plotManager.getPlotByChunkCoords(world, plotX, plotZ);
+		
 		//if there's a plot and the ID is the same as our original town, this plot is connected.
 		if(checkPlot != null && nations.townManager.getTownByID(checkPlot.getTownID()).getID() == townID) {
 			found++;
 		}
+		
+		checkPlot = null;
 		
 		//recursively check NESW plots (within the 3x3 via check above), and add them to the total
 		found += this.connectedPlots(townID, world, origX, origZ, plotX+1, plotZ);

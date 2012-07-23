@@ -24,7 +24,7 @@ public class TownCommand extends NationsCommand {
 		}
 		
 		// -town found
-		if(command[0].equalsIgnoreCase("town")) {
+		if(command[0].equalsIgnoreCase("found")) {
 			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
 				this.helpText(commandSender, "i.e. '/town found [town name]", "Forms a town.");
 				return;
