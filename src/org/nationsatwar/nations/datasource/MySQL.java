@@ -18,8 +18,6 @@ import java.util.logging.Level;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
-import org.nationsatwar.nations.managers.NationManager;
-import org.nationsatwar.nations.managers.NationsManagement;
 import org.nationsatwar.nations.objects.NationsObject;
 import org.nationsatwar.nations.objects.Rank.RankType;
 
@@ -305,6 +303,8 @@ public class MySQL extends DataSource {
 				case INT_KEY:
 					stmt.setInt(i++, field.getInt(obj));
 					break;
+				default:
+					break;
 				}
 			}
 			return i - 1;
@@ -392,6 +392,8 @@ public class MySQL extends DataSource {
 				case HASHMAP_STRING_DOUBLE:
 					hasLists = true;
 					break;
+				default:
+					break;
 				}
 			}
 			plugin.getLogger().log(Level.INFO, stmt.toString());
@@ -429,6 +431,8 @@ public class MySQL extends DataSource {
 									break;
 								case DOUBLE_LIST:
 									add.setDouble(numkeys + 2, (Double) listitem);
+								default:
+									break;
 								}
 								add.executeUpdate();
 							}						
@@ -446,12 +450,16 @@ public class MySQL extends DataSource {
 									add.setInt(numkeys + 1, (Integer) entry.getKey());
 									add.setInt(numkeys + 2, (Integer) entry.getValue());
 									break;
+								default:
+									break;
 								}
 								plugin.getLogger().log(Level.FINE, add.toString());
 								add.executeUpdate();
 							}				
 						}
 						add.close();
+					default:
+						break;
 					}
 				}
 			}
@@ -528,6 +536,8 @@ public class MySQL extends DataSource {
 					case HASHMAP_STRING_DOUBLE:
 					case HASHMAP_INT_INT:
 						hasLists = true;
+					default:
+						break;
 					}
 					
 				}
@@ -592,6 +602,8 @@ public class MySQL extends DataSource {
 							listrs.close();
 							getlist.close();
 							break;
+						default:
+							break;
 						}
 						
 					}
@@ -638,6 +650,8 @@ public class MySQL extends DataSource {
 					prepareKey(stmt, obj);
 					stmt.executeUpdate();
 					stmt.close();
+					break;
+				default:
 					break;
 				}
 			}
@@ -715,6 +729,9 @@ public class MySQL extends DataSource {
 					case HASHMAP_STRING_DOUBLE:
 					case HASHMAP_INT_INT:
 						hasLists = true;
+						break;
+					default:
+						break;
 					}
 				}
 				if (hasLists) {
@@ -764,7 +781,7 @@ public class MySQL extends DataSource {
 							}
 							listrs.close();
 							getlist.close();
-							break;			
+							break;	
 						case HASHMAP_INT_INT:
 							listtable = TABLE_PREFIX + objtype + "_" + name;
 							getlist = conn.prepareStatement("SELECT _idx,_item FROM " + listtable + " WHERE " + getQuery("where", objtype));
@@ -778,6 +795,8 @@ public class MySQL extends DataSource {
 							}
 							listrs.close();
 							getlist.close();
+							break;
+						default:
 							break;	
 						}
 					}

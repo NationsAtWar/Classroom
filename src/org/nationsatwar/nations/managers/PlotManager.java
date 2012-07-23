@@ -107,6 +107,15 @@ public class PlotManager extends NationsManagement {
 		return null;
 	}
 	
+	public Plot getPlotByChunkCoords(World world, int x, int z) {
+		for(Plot plot : this.plotMap.values()) {
+			if(plot.getLocationKey().equalsIgnoreCase(world.getName()+";"+x+";"+z)) {
+				return plot;
+			}
+		}
+		return null;
+	}
+	
 	public String getLocationKey(Location location) {
 		return location.getWorld().getName()+";"+location.getChunk().getX()+";"+location.getChunk().getZ();
 	}

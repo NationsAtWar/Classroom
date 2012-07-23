@@ -3,9 +3,6 @@ package org.nationsatwar.nations.commands;
 import org.bukkit.command.CommandSender;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Alliance;
-import org.nationsatwar.nations.objects.Nation;
-import org.nationsatwar.nations.objects.User;
-import org.nationsatwar.nations.objects.Invite.InviteType;
 
 public class AllianceCommand extends NationsCommand {
 

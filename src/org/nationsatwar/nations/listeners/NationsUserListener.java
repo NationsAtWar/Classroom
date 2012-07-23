@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
