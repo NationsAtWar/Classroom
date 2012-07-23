@@ -80,6 +80,7 @@ public class NationsUserListener implements Listener {
 				}
 				if(plotNation.getID() != plugin.nationManager.getNationByUserID(user.getID()).getID()) {
 					event.setCancelled(true);
+					event.setTo(event.getFrom());
 				}
 			}
 		}
