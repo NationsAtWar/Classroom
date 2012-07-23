@@ -48,7 +48,7 @@ public class NationsBlockListener implements Listener {
 		Town plotTown = plugin.townManager.getTownByID(plot.getTownID());
 		Nation plotNation = null;
 		if(plotTown != null) {
-			plotNation = plugin.nationManager.getNationByID(plotTown.getID());
+			plotNation = plugin.nationManager.getNationByID(plotTown.getNationID());
 		}
 		
 		//check these when adding locks
