@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
 import org.nationsatwar.nations.objects.User;
@@ -69,7 +70,14 @@ public class NationsUserListener implements Listener {
 		
 		if(event.getCause()==TeleportCause.ENDER_PEARL) {
 			if(plot != null && user != null) {
-				Town plotNation = plugin.townManager.getTownByID(plot.getTownID());
+				Town plotTown = plugin.townManager.getTownByID(plot.getTownID());
+				if(plotTown == null) {
+					return;
+				}
+				Nation plotNation = plugin.nationManager.getNationByID(plotTown.getNationID());
+				if(plotNation == null) {
+					return;
+				}
 				if(plotNation.getID() != plugin.nationManager.getNationByUserID(user.getID()).getID()) {
 					event.setCancelled(true);
 				}
