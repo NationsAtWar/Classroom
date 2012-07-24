@@ -30,6 +30,14 @@ public class Alliance extends NationsObject {
 		}
 		return false;
 	}
+	
+	public boolean removeNation(Nation nation) {
+		if(this.nations.contains(nation.getID())) {
+			this.nations.remove((Integer) nation.getID());
+			return true;
+		}
+		return false;
+	}
 
 	public ArrayList<Integer> getNations() {
 		return this.nations;

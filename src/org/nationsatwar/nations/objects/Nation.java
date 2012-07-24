@@ -58,6 +58,14 @@ public class Nation extends NationsObject {
 		}
 		return false;
 	}
+	
+	public boolean removeTown(Town town) {
+		if(this.towns.contains(town.getID())) {
+			this.towns.remove((Integer) town.getID());
+			return true;
+		}
+		return false;
+	}
 
 	public boolean removeMember(User user) {
 		if(this.members.containsKey(user.getID())) {
