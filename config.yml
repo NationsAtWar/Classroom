@@ -1,4 +1,5 @@
 currency: false
+blockpearls: true
 datasource:
     use_mysql: true
     mysql:

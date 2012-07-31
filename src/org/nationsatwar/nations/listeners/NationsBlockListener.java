@@ -75,7 +75,7 @@ public class NationsBlockListener implements Listener {
 	public synchronized void onBlockDamage(BlockDamageEvent event) {
 		User user = plugin.userManager.getUserByPlayer(event.getPlayer());
 		Plot plot = plugin.plotManager.getPlotByLocation(event.getBlock().getLocation());
-		if(!this.canInteract(plot, user)) {
+		if(!event.getPlayer().hasPermission("nationsatwar.nations.admin") && !this.canInteract(plot, user)) {
 			event.setCancelled(true);
 		}
 	}
@@ -84,7 +84,7 @@ public class NationsBlockListener implements Listener {
 	public synchronized void onBlockBreak(BlockBreakEvent event) {
 		User user = plugin.userManager.getUserByPlayer(event.getPlayer());
 		Plot plot = plugin.plotManager.getPlotByLocation(event.getBlock().getLocation());
-		if(!this.canInteract(plot, user)) {
+		if(!event.getPlayer().hasPermission("nationsatwar.nations.admin") && !this.canInteract(plot, user)) {
 			event.setCancelled(true);
 		}
 	}
@@ -93,7 +93,7 @@ public class NationsBlockListener implements Listener {
 	public synchronized void onBlockPlace(BlockPlaceEvent event) {
 		User user = plugin.userManager.getUserByPlayer(event.getPlayer());
 		Plot plot = plugin.plotManager.getPlotByLocation(event.getBlock().getLocation());
-		if(!this.canInteract(plot, user)) {
+		if(!event.getPlayer().hasPermission("nationsatwar.nations.admin") && !this.canInteract(plot, user)) {
 			event.setCancelled(true);
 		}
 		
@@ -132,7 +132,7 @@ public class NationsBlockListener implements Listener {
 			User user = plugin.userManager.getUserByPlayer(event.getPlayer());
 			Plot plot = plugin.plotManager.getPlotByLocation(block.getLocation());
 	
-			if(!this.canInteract(plot, user)) {
+			if(!event.getPlayer().hasPermission("nationsatwar.nations.admin") && !this.canInteract(plot, user)) {
 				event.setCancelled(true);
 				return;
 			}
