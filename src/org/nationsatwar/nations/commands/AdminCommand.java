@@ -56,8 +56,12 @@ public class AdminCommand extends NationsCommand {
 					return;
 				}
 				
-				this.successText(commandSender, "This would successfully disband " + cmdnation.getName(), null);
 				
+				if(nations.nationManager.delete(cmdnation)) {
+					nations.notifyAll("The nation of " + cmdnation.getName() + " was lost to the sands of time!");
+					this.successText(commandSender, "Successfully disbanded " + cmdnation.getName(), null);
+					return;
+				}
 			}
 		}
 
