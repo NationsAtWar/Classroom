@@ -16,6 +16,7 @@ import org.nationsatwar.nations.managers.PlotManager;
 import org.nationsatwar.nations.managers.RankManager;
 import org.nationsatwar.nations.managers.TownManager;
 import org.nationsatwar.nations.managers.UserManager;
+import org.nationsatwar.nations.threads.ReloadThread;
 
 public class Nations extends JavaPlugin {
 	public DataSource database;
@@ -53,6 +54,7 @@ public class Nations extends JavaPlugin {
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ReloadThread(this), 20L * 60 * 60 * 4, 20L * 60 * 60 * 4);
 	}
 	
 	public void onDisable() {
@@ -70,7 +72,28 @@ public class Nations extends JavaPlugin {
 	}
 	
 	public void reload(CommandSender sender) {
-
+		if(sender != null) {
+			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloading Nations.");
+			this.reloadConfig();
+		}
+		
+		plotManager.saveAll();
+		nationManager.saveAll();
+		townManager.saveAll();
+		rankManager.saveAll();
+		inviteManager.saveAll();
+		userManager.saveAll();
+		
+		plotManager.loadAll();
+		nationManager.loadAll();
+		townManager.loadAll();
+		rankManager.loadAll();
+		inviteManager.loadAll();
+		userManager.loadAll();
+		
+		if(sender != null) {
+			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloaded.");
+		}	
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
