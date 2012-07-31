@@ -45,12 +45,7 @@ public class Nations extends JavaPlugin {
 		if(this.getConfig().getBoolean("datasource.use_mysql"))
 			database = new MySQL(this);
 		
-		plotManager.loadAll();
-		nationManager.loadAll();
-		townManager.loadAll();
-		rankManager.loadAll();
-		inviteManager.loadAll();
-		userManager.loadAll();
+		this.load();
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
@@ -60,15 +55,28 @@ public class Nations extends JavaPlugin {
 	public void onDisable() {
 		this.saveConfig();
 		
+		this.save();
+		database = null;
+		
+		this.getLogger().info(this.getVersion()+ " Unloaded");
+	}
+	
+	public void load() {
+		plotManager.loadAll();
+		nationManager.loadAll();
+		townManager.loadAll();
+		rankManager.loadAll();
+		inviteManager.loadAll();
+		userManager.loadAll();		
+	}
+	
+	public void save() {
 		plotManager.saveAll();
 		nationManager.saveAll();
 		townManager.saveAll();
 		rankManager.saveAll();
 		inviteManager.saveAll();
 		userManager.saveAll();
-		database = null;
-		
-		this.getLogger().info(this.getVersion()+ " Unloaded");
 	}
 	
 	public void reload(CommandSender sender) {
@@ -77,19 +85,8 @@ public class Nations extends JavaPlugin {
 			this.reloadConfig();
 		}
 		
-		plotManager.saveAll();
-		nationManager.saveAll();
-		townManager.saveAll();
-		rankManager.saveAll();
-		inviteManager.saveAll();
-		userManager.saveAll();
-		
-		plotManager.loadAll();
-		nationManager.loadAll();
-		townManager.loadAll();
-		rankManager.loadAll();
-		inviteManager.loadAll();
-		userManager.loadAll();
+		this.save();
+		this.load();
 		
 		if(sender != null) {
 			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloaded.");
