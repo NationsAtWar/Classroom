@@ -63,31 +63,7 @@ public class CommandManager {
 			new AdminCommand(sender, commandLabel, args).run();
 			return true;
 		}
-		/*if(commandLabel.equalsIgnoreCase("nations")) {
-			if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-				if(plugin instanceof Nations){
-					if(player != null) {
-						if(!player.hasPermission("nations.paste.admin")) {
-							player.sendMessage("Sorry, you don't have permissions for that");
-							return false;
-						}
-					}
-					((Nations) plugin).reload(sender);
-				}
-			}
-		}*/
 		
-		/*
-		if (command.length == 0)
-			new Help(commandSender, command).run();
-		else if (command[0].equalsIgnoreCase("accept"))
-			new Accept(commandSender, command).run();
-		else if (command[0].equalsIgnoreCase("help"))
-			new Help(commandSender, command).run();
-		else
-			// default for just typing [/naw]
-			new Help(commandSender, command).run();
-			*/
 		return false;
 	}
 }
