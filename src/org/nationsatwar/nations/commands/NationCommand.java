@@ -129,6 +129,11 @@ public class NationCommand extends NationsCommand {
 			User inviter = user;
 			User invitee = nations.userManager.findUser(command[1]);
 			
+			if(!nations.nationManager.isPopulationBalanced(nations.nationManager.getNationByUserID(inviter.getID()))) {
+				this.errorText(commandSender, "Your nation is full at the moment.", null);
+				return;				
+			}
+			
 			if(invitee == null) {
 				this.errorText(commandSender, "That user does not exist or is not registered!", null);
 				return;

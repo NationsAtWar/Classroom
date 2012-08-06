@@ -1,5 +1,6 @@
 currency: false
 balancing: nation
+balancingpercent: 10;
 reloadhours: 6
 inviteaging: 28
 blockpearls: true
