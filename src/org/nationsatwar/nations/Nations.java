@@ -1,5 +1,7 @@
 package org.nationsatwar.nations;
 
+import java.util.Calendar;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -84,6 +86,10 @@ public class Nations extends JavaPlugin {
 			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloading Nations.");
 			this.reloadConfig();
 		}
+		
+		int reloadHours = this.getConfig().getInt("reloadhours", 6);
+		int inviteAging = this.getConfig().getInt("inviteaging",28);
+		inviteManager.ageInvites(Calendar.HOUR, reloadHours * inviteAging);
 		
 		this.save();
 		this.load();

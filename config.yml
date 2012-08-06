@@ -1,4 +1,7 @@
 currency: false
+balancing: nation
+reloadhours: 6
+inviteaging: 28
 blockpearls: true
 datasource:
     use_mysql: true
