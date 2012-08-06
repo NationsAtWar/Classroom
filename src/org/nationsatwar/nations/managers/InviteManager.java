@@ -143,7 +143,7 @@ public class InviteManager extends NationsManagement {
 		return true;
 	}
 
-	private boolean deleteInvite(Invite inv) {
+	public boolean deleteInvite(Invite inv) {
 		if(!(plugin instanceof Nations)) {
 			return false;
 		}

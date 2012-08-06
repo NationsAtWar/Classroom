@@ -183,6 +183,35 @@ public class NationCommand extends NationsCommand {
 			return;
 		}
 		
+		// -nation decline [String: userName]
+		if(command[0].equalsIgnoreCase("decline")) {
+			if(command.length == 2 || command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nation decline [player name]", "Declines a nation invite from a player.");
+				return;
+			}
+			
+			ArrayList<Invite> invites = null;
+			if(user != null) {
+				invites = nations.inviteManager.getInvites(user);
+			}
+			if(invites == null || invites.isEmpty()) {
+				this.successText(commandSender, null, "No invites present.");
+				return;
+			}
+			for(Invite inv : invites) {
+				User inviter = nations.userManager.getUserByID(inv.getInviter());
+				if(inviter.getName().equalsIgnoreCase(command[1])) {
+					if(nations.inviteManager.deleteInvite(inv)) {
+						this.successText(commandSender, "You've declined your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
+					}
+					return;
+				}
+			}
+			this.errorText(commandSender, "That was not a valid invitation", null);	
+			
+			return;
+		}
+		
 		// -nation listinvites
 		if(command[0].equalsIgnoreCase("listinvites")) {
 			if(command.length == 2 && command[1].equalsIgnoreCase("help")) {
