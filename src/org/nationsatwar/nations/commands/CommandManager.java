@@ -59,10 +59,6 @@ public class CommandManager {
 			new Raze(sender, commandLabel, args).run();
 			return true;
 		}
-		if(commandLabel.equalsIgnoreCase("accept")) {
-			new Accept(sender, commandLabel, args).run();
-			return true;
-		}
 		if(commandLabel.equalsIgnoreCase("nadmin")) {
 			new AdminCommand(sender, commandLabel, args).run();
 			return true;
