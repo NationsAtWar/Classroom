@@ -137,4 +137,26 @@ public class NationManager extends NationsManagement {
 		return false;
 		
 	}
+
+	public boolean isPopulationBalanced(Nation checkNation) {
+		if(plugin.getConfig().getString("balancing","nation").equalsIgnoreCase("nation")) {
+			int percentToBalanceBy = plugin.getConfig().getInt("balancingpercent", 10);
+			
+			int totalNationPop = 0;
+			int totalNations = 0;
+			
+			for(Nation nation : this.nationMap.values()) {
+				totalNationPop = totalNationPop + nation.getMembers(null).size();
+				totalNations++;
+			}
+			
+			int deviance = (totalNationPop / totalNations) * (percentToBalanceBy / 100);
+			int max = (totalNationPop / totalNations) + deviance;
+			
+			if(checkNation.getMembers(null).size() > max) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

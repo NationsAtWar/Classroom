@@ -1,10 +1,12 @@
 package org.nationsatwar.nations.managers;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.objects.Invite;
@@ -89,6 +91,71 @@ public class InviteManager extends NationsManagement {
 			}
 		}
 		return newList;
+	}
+	
+	public boolean ageInvites(int calendarField, int amount) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		Calendar now = Calendar.getInstance();
+		
+		for(Invite inv : this.inviteMap.values()) {
+			Calendar checkOne = Calendar.getInstance();
+			checkOne.setTimeInMillis(inv.getInitiated());
+			checkOne.add(calendarField, amount);
+			
+			Calendar checkTwo = Calendar.getInstance();
+			checkTwo.setTimeInMillis(inv.getInitiated());
+			checkTwo.add(calendarField, (int) (amount*.90));
+			
+			User invitee = nations.userManager.getUserByID(inv.getInvitee());
+			User inviter = nations.userManager.getUserByID(inv.getInviter());
+			
+			Player inviteePlayer = nations.getServer().getPlayer(invitee.getName());
+			Player inviterPlayer = nations.getServer().getPlayer(inviter.getName());
+			
+			String expired = "Your "+inv.getNiceType()+" invitation to "+invitee.getName()+" and from "+inviter.getName()+" has expired!";;
+			if(now.after(checkOne)) {
+				if(inviteePlayer != null) {
+					inviteePlayer.sendMessage(expired);
+				}
+				if(inviterPlayer != null) {
+					inviterPlayer.sendMessage(expired);
+				}
+				if(this.deleteInvite(inv)) {
+					continue;
+				}
+			}
+			
+			String expiring = "Your "+inv.getNiceType()+" invitation to "+invitee.getName()+" and from "+inviter.getName()+" is about to expire";
+			if(now.after(checkOne)) {
+				if(inviteePlayer != null) {
+					inviteePlayer.sendMessage(expiring);
+				}
+				if(inviterPlayer != null) {
+					inviterPlayer.sendMessage(expiring);
+				}
+			}			
+		
+		}
+		return true;
+	}
+
+	public boolean deleteInvite(Invite inv) {
+		if(!(plugin instanceof Nations)) {
+			return false;
+		}
+		Nations nations = (Nations) plugin;
+		
+		if(inviteMap.containsKey(inv.getID())) {
+			this.inviteMap.remove(inv.getID());
+			if(nations.database.delete(inv)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

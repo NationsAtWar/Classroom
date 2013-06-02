@@ -1,5 +1,7 @@
 package org.nationsatwar.nations;
 
+import java.util.Calendar;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,6 +18,7 @@ import org.nationsatwar.nations.managers.PlotManager;
 import org.nationsatwar.nations.managers.RankManager;
 import org.nationsatwar.nations.managers.TownManager;
 import org.nationsatwar.nations.managers.UserManager;
+import org.nationsatwar.nations.threads.ReloadThread;
 
 public class Nations extends JavaPlugin {
 	public DataSource database;
@@ -44,33 +47,56 @@ public class Nations extends JavaPlugin {
 		if(this.getConfig().getBoolean("datasource.use_mysql"))
 			database = new MySQL(this);
 		
-		plotManager.loadAll();
-		nationManager.loadAll();
-		townManager.loadAll();
-		rankManager.loadAll();
-		inviteManager.loadAll();
-		userManager.loadAll();
+		this.load();
 		
 		this.getLogger().info(this.getVersion()+ " Loaded");
 		
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new ReloadThread(this), 20L * 60 * 60 * 4, 20L * 60 * 60 * 4);
 	}
 	
 	public void onDisable() {
 		this.saveConfig();
 		
+		this.save();
+		database = null;
+		
+		this.getLogger().info(this.getVersion()+ " Unloaded");
+	}
+	
+	public void load() {
+		plotManager.loadAll();
+		nationManager.loadAll();
+		townManager.loadAll();
+		rankManager.loadAll();
+		inviteManager.loadAll();
+		userManager.loadAll();		
+	}
+	
+	public void save() {
 		plotManager.saveAll();
 		nationManager.saveAll();
 		townManager.saveAll();
 		rankManager.saveAll();
 		inviteManager.saveAll();
 		userManager.saveAll();
-		database = null;
-		
-		this.getLogger().info(this.getVersion()+ " Unloaded");
 	}
 	
 	public void reload(CommandSender sender) {
-
+		if(sender != null) {
+			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloading Nations.");
+			this.reloadConfig();
+		}
+		
+		int reloadHours = this.getConfig().getInt("reloadhours", 6);
+		int inviteAging = this.getConfig().getInt("inviteaging",28);
+		inviteManager.ageInvites(Calendar.HOUR, reloadHours * inviteAging);
+		
+		this.save();
+		this.load();
+		
+		if(sender != null) {
+			sender.sendMessage(ChatColor.DARK_RED + "["+this.getName()+"]: " + "Reloaded.");
+		}	
 	}
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {

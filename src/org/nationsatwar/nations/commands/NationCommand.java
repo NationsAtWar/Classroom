@@ -1,8 +1,13 @@
 package org.nationsatwar.nations.commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Invite;
 import org.nationsatwar.nations.objects.Nation;
+import org.nationsatwar.nations.objects.Town;
 import org.nationsatwar.nations.objects.User;
 import org.nationsatwar.nations.objects.Invite.InviteType;
 
@@ -14,11 +19,15 @@ public class NationCommand extends NationsCommand {
 	
 	@Override
 	public void run() {
+		if(!(plugin instanceof Nations)) {
+			return;
+		}
+		Nations nations = (Nations) plugin;
 		//double nationPrice = plugin.getConfig().getDouble("nation_price");
 		
 		// -nation || nation help
 		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
-			this.helpText(commandSender, "i.e. '/nation [found|invite|leave|founder]", "Nation manipulation commands. Use /nation [subcommand] for more help.");
+			this.helpText(commandSender, "i.e. '/nation [found|invite|leave|founder|accept|invitelist]", "Nation manipulation commands. Use /nation [subcommand] for more help.");
 			return;
 		}
 		
@@ -50,11 +59,7 @@ public class NationCommand extends NationsCommand {
 				this.errorText(commandSender, "Too many apostrophes:", ":/");
 				return;
 			}
-			
-			if(!(plugin instanceof Nations)) {
-				return;
-			}
-			Nations nations = (Nations) plugin;
+
 			
 			for(Nation nation : nations.nationManager.getNations().values()) {
 				if(nation.getName().equalsIgnoreCase(nationName)) {
@@ -92,11 +97,6 @@ public class NationCommand extends NationsCommand {
 				return;
 			}
 			
-			if(!(plugin instanceof Nations)) {
-				return;
-			}
-			Nations nations = (Nations) plugin;
-			
 			Nation nation = nations.nationManager.getNationByUserID(user.getID());
 			if(user != null) {
 				if(nation == null) {
@@ -121,19 +121,18 @@ public class NationCommand extends NationsCommand {
 		
 		// -nation invite [String: userName]
 		if(command[0].equalsIgnoreCase("invite")) {
-			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
+			if(command.length == 2 || command[1].equalsIgnoreCase("help")) {
 				this.helpText(commandSender, "i.e. '/nation invite [player name]", "invites a player to your nation.");
 				return;
 			}
-			
-			if(!(plugin instanceof Nations)) {
-				return;
-			}
-			Nations nations = (Nations) plugin;
-			
-			
+				
 			User inviter = user;
 			User invitee = nations.userManager.findUser(command[1]);
+			
+			if(!nations.nationManager.isPopulationBalanced(nations.nationManager.getNationByUserID(inviter.getID()))) {
+				this.errorText(commandSender, "Your nation is full at the moment.", null);
+				return;				
+			}
 			
 			if(invitee == null) {
 				this.errorText(commandSender, "That user does not exist or is not registered!", null);
@@ -142,8 +141,106 @@ public class NationCommand extends NationsCommand {
 			
 			if(nations.inviteManager.createInvite(InviteType.PLAYERNATION, inviter, invitee)) {
 				this.successText(commandSender, "Invite Sent.", null);
+				Player inviteePlayer = nations.getServer().getPlayer(invitee.getName());
+				if(inviteePlayer != null) {
+					this.successText(inviteePlayer, "Nation invite recieved from "+inviter.getName(), null);
+				}
 			}
 			
+			return;
+		}
+		
+		// -nation accept [String: userName]
+		if(command[0].equalsIgnoreCase("accept")) {
+			if(command.length == 2 || command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nation accept [player name]", "accepts a nation invite from a player.");
+				return;
+			}
+			
+			ArrayList<Invite> invites = null;
+			if(user != null) {
+				invites = nations.inviteManager.getInvites(user);
+			}
+			if(invites == null || invites.isEmpty()) {
+				this.successText(commandSender, null, "No invites present.");
+				return;
+			}
+			for(Invite inv : invites) {
+				User inviter = nations.userManager.getUserByID(inv.getInviter());
+				if(inviter.getName().equalsIgnoreCase(command[1])) {
+					Nation nation = nations.nationManager.getNationByUserID(user.getID());
+					Town town = nations.townManager.getTownByUserID(user.getID());
+					if(nation != null) {
+						nation.removeMember(user);
+					}
+					if(town != null) {
+						town.removeMember(user);
+					}
+					//TODO: remove the town here when town membership is more fluid.
+					if(nations.nationManager.getNationByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank()) && nations.townManager.getTownByUserID(inviter.getID()).addMember(user, nations.rankManager.getRecruitRank())) {
+						this.successText(commandSender, "You've accepted your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
+					}
+					return;
+				}
+			}
+			this.errorText(commandSender, "That was not a valid invitation", null);	
+			
+			return;
+		}
+		
+		// -nation decline [String: userName]
+		if(command[0].equalsIgnoreCase("decline")) {
+			if(command.length == 2 || command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nation decline [player name]", "Declines a nation invite from a player.");
+				return;
+			}
+			
+			ArrayList<Invite> invites = null;
+			if(user != null) {
+				invites = nations.inviteManager.getInvites(user);
+			}
+			if(invites == null || invites.isEmpty()) {
+				this.successText(commandSender, null, "No invites present.");
+				return;
+			}
+			for(Invite inv : invites) {
+				User inviter = nations.userManager.getUserByID(inv.getInviter());
+				if(inviter.getName().equalsIgnoreCase(command[1])) {
+					if(nations.inviteManager.deleteInvite(inv)) {
+						this.successText(commandSender, "You've declined your invitation into "+nations.nationManager.getNationByUserID(inviter.getID()).getName()+".", null);					
+					}
+					return;
+				}
+			}
+			this.errorText(commandSender, "That was not a valid invitation", null);	
+			
+			return;
+		}
+		
+		// -nation listinvites
+		if(command[0].equalsIgnoreCase("listinvites")) {
+			if(command.length == 2 && command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nation listinvites", "Lists the nation invites you've recieved.");
+				return;
+			}
+				
+			ArrayList<Invite> invites = null;
+			if(user != null) {
+				invites = nations.inviteManager.getInvites(user);
+			}
+			if(invites == null || invites.isEmpty()) {
+				this.successText(commandSender, null, "No invites present.");
+				return;
+			}
+			for(Invite inv : invites) {
+				
+				if(inv.getType() == InviteType.PLAYERNATION) {
+					User inviter = nations.userManager.getUserByID(inv.getInviter());
+					this.successText(commandSender, inv.getNiceType()+" Invitation From: "+inviter.getName()+" ("+nations.nationManager.getNationByUserID(inviter.getID())+")", null);
+				}
+				
+				
+			}
 			return;
 		}
 		
@@ -158,12 +255,7 @@ public class NationCommand extends NationsCommand {
 				this.errorText(commandSender, "No user found.", null);
 				return;
 			}
-			
-			if(!(plugin instanceof Nations)) {
-				return;
-			}
-			Nations nations = (Nations) plugin;
-			
+
 			Nation nation = nations.nationManager.getNationByUserID(user.getID());
 			if(user != null) {
 				if(nation == null) {

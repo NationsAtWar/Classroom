@@ -20,7 +20,7 @@ public class AdminCommand extends NationsCommand {
 		
 		// -nadmin || nadmin help
 		if(command.length == 0 || command[0].equalsIgnoreCase("help")) {
-			this.helpText(commandSender, "i.e. '/nadmin [nation|town]", "Admin manipulation commands. Use '/nadmin [subcommand] help' for more help.");
+			this.helpText(commandSender, "i.e. '/nadmin [nation|town|reload]", "Admin manipulation commands. Use '/nadmin [subcommand] help' for more help.");
 			return;
 		}
 		
@@ -28,6 +28,14 @@ public class AdminCommand extends NationsCommand {
 			return;
 		}
 		Nations nations = (Nations) plugin;
+		
+		if(command[0].equalsIgnoreCase("reload")) {
+			if(command.length == 1 || command[1].equalsIgnoreCase("help")) {
+				this.helpText(commandSender, "i.e. '/nadmin reload", "Reloads the plugin.");
+				return;
+			}
+			nations.reload(commandSender);
+		}
 		
 		// -nadmin nation
 		if(command[0].equalsIgnoreCase("nation")) {
@@ -56,8 +64,12 @@ public class AdminCommand extends NationsCommand {
 					return;
 				}
 				
-				this.successText(commandSender, "This would successfully disband " + cmdnation.getName(), null);
 				
+				if(nations.nationManager.delete(cmdnation)) {
+					nations.notifyAll("The nation of " + cmdnation.getName() + " was lost to the sands of time!");
+					this.successText(commandSender, "Successfully disbanded " + cmdnation.getName(), null);
+					return;
+				}
 			}
 		}
 

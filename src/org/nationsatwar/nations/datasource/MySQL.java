@@ -161,6 +161,7 @@ public class MySQL extends DataSource {
 				map.put("type", ColumnType.STRING);
 				map.put("invitee", ColumnType.INT);
 				map.put("inviter", ColumnType.INT);
+				map.put("intiated", ColumnType.STRING);
 			} else if (objtype.equals("nation")) {
 				map.put("id", ColumnType.INT_KEY);
 				map.put("name", ColumnType.STRING);

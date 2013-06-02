@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
 import org.nationsatwar.nations.objects.User;
@@ -64,14 +65,31 @@ public class NationsUserListener implements Listener {
 	@EventHandler
 	public synchronized void onPlayerTeleport(PlayerTeleportEvent event) {
 	//Blocks enderpearl teleporting in nations that are not your own.
-		User user = plugin.userManager.getUserByPlayer(event.getPlayer());
-		Plot plot = plugin.plotManager.getPlotByLocation(event.getTo().getBlock().getLocation());
-		
-		if(event.getCause()==TeleportCause.ENDER_PEARL) {
-			if(plot != null && user != null) {
-				Town plotNation = plugin.townManager.getTownByID(plot.getTownID());
-				if(plotNation.getID() != plugin.nationManager.getNationByUserID(user.getID()).getID()) {
-					event.setCancelled(true);
+		if(plugin.getConfig().getBoolean("blockpearls", true)) {
+			User user = plugin.userManager.getUserByPlayer(event.getPlayer());
+			Plot plot = plugin.plotManager.getPlotByLocation(event.getTo().getBlock().getLocation());
+			
+			if(event.getCause()==TeleportCause.ENDER_PEARL) {
+				if(plot != null && user != null) {
+					Town plotTown = plugin.townManager.getTownByID(plot.getTownID());
+					if(plotTown == null) {
+						return;
+					}
+					Nation plotNation = plugin.nationManager.getNationByID(plotTown.getNationID());
+					if(plotNation == null) {
+						return;
+					}
+					Nation userNation = plugin.nationManager.getNationByUserID(user.getID());
+					if(userNation == null) {
+						event.setCancelled(true);
+						event.setTo(event.getFrom());
+						return;
+					}
+					if(plotNation.getID() != userNation.getID()) {
+						event.setCancelled(true);
+						event.setTo(event.getFrom());
+						return;
+					}
 				}
 			}
 		}

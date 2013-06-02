@@ -97,7 +97,7 @@ public class Town extends NationsObject {
 
 	public boolean removePlot(Plot plot) {
 		if(this.plots.contains(plot.getID())) {
-			this.plots.remove(plot.getID());
+			this.plots.remove((Integer) plot.getID());
 			return true;
 		}
 		return false;

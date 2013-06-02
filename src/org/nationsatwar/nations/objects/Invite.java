@@ -4,6 +4,7 @@ public class Invite extends NationsObject {
 	private InviteType type;
 	private int invitee;
 	private int inviter;
+	private String intiated; //Timestamp for when this was created.
 	
 	public Invite() {
 		super(-1);
@@ -12,6 +13,8 @@ public class Invite extends NationsObject {
 	public Invite(int newId, InviteType newType, int newInviter, int newInvitee) {
 		super(newId);
 		this.type = newType;
+		Long timestamp = System.currentTimeMillis()/1000;
+		this.intiated = timestamp.toString();
 		
 		if(newType == InviteType.PLAYERNATION) {
 			this.invitee = newInvitee;
@@ -40,6 +43,11 @@ public class Invite extends NationsObject {
 
 	public int getInviter() {
 		return inviter;
+	}
+	
+	public long getInitiated() {
+		Long timestamp = Long.getLong(this.intiated)*1000;
+		return timestamp;
 	}
 
 }
