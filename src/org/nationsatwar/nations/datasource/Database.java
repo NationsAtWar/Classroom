@@ -2,6 +2,7 @@ package org.nationsatwar.nations.datasource;
 
 import java.util.ArrayList;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Organization;
 
 public class Database {
 	private Nations plugin = null;
@@ -24,12 +25,24 @@ public class Database {
 		return this.source.reloadDatabase();
 	}
 	
+	public boolean save() {
+		return this.source.saveDatabase();
+	}
+	
 	public boolean save(String org) {
 		return false;
 	}
 
 	public ArrayList<String> getOrgNames() {
 		return this.source.getOrgNames();
+	}
+	
+	public Organization getOrganization(String s) {
+		return this.source.getOrganization(s);
+	}
+	
+	public boolean removeOrganization(String orgName) {
+		return this.source.removeOrganization(orgName);
 	}
 	
 	private enum DatabaseType {

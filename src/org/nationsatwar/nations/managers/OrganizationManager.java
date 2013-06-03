@@ -1,25 +1,20 @@
 package org.nationsatwar.nations.managers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
-
-import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
 import org.nationsatwar.nations.datasource.Database;
+import org.nationsatwar.nations.events.NationsCreateEvent.NationsCreateEventType;
 import org.nationsatwar.nations.events.NationsDestroyEvent;
 import org.nationsatwar.nations.events.NationsDestroyEvent.NationsDestroyEventType;
 import org.nationsatwar.nations.objects.Organization;
-import org.nationsatwar.nations.objects.Plot;
 
 public class OrganizationManager {
 	private Nations plugin;
 	private Database database;
 	//Do we need to keep these in memory or can we just get them as needed?
-	//private Map<String, Organization> orgs;
-	private ArrayList<String> orgs;
+	private Map<String, Organization> orgs;
+	//Sure why not. It's easier for now.
+	//private ArrayList<String> orgs;
 	private String type; //name set in config
 	private int orgLevel;
 	private boolean hasPlots;
@@ -37,12 +32,12 @@ public class OrganizationManager {
 
 	public void loadAll() {
 		for(String s : this.database.getOrgNames()) {
-			orgs.add(s);
-		}
+			this.orgs.put(s, this.database.getOrganization(s));
+		}		
 	}
 
 	public void saveAll() {
-		for(String s : this.orgs) {
+		for(String s : this.orgs.keySet()) {
 			this.database.save(s);
 		}
 	}
@@ -73,10 +68,15 @@ public class OrganizationManager {
 			this.plugin.messageAll("There are no longer any souls to light the torches in " +orgName + ". It has fallen.");
 		}
 		
-		if(!this.orgs.remove(orgName)) {
+		if((this.orgs.remove(orgName) != null) && !this.database.removeOrganization(orgName)) {
 			return false;
 		}
 		
 		return true;
+	}
+
+	public Organization addOrg(String orgName, String member, NationsCreateEventType eventType) {
+		this.orgs.put(orgName, new Organization(orgName, member, this.orgLevel));
+		return this.getOrganization(orgName);
 	}
 }

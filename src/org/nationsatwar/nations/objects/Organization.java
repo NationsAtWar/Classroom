@@ -15,6 +15,10 @@ public class Organization {
 		this.level = newLevel;
 	}
 	
+	public Organization() {
+		//for reflection only
+	}
+
 	public String getName() {
 		return this.name;
 	}

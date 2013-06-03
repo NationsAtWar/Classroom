@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.objects.Organization;
 
 public class DataFile extends DataSource {
 	private FileConfiguration storage = null;
@@ -52,18 +53,40 @@ public class DataFile extends DataSource {
 
 	@Override
 	public boolean exists(String orgName) {
-		return this.getDatabase().getConfigurationSection("orgName") != null;
-	}
-
-	@Override
-	public boolean saveOrganization(String orgName) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.getDatabase().getRoot().getKeys(false).contains("orgName");
 	}
 
 	@Override
 	public ArrayList<String> getOrgNames() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<String> names = new ArrayList<String>();
+		names.addAll(this.getDatabase().getRoot().getKeys(false));
+		return names;
+	}
+
+	@Override
+	public boolean saveOrganization(Organization org) {
+		this.getDatabase().set(org.getName(), org);
+		if(this.getOrganization(org.getName()).equals(org)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Organization getOrganization(String orgName) {
+		Organization org = (Organization) this.getDatabase().get("orgName");
+		return org;
+	}
+
+	@Override
+	public boolean removeOrganization(String orgName) {
+		this.getDatabase().set(orgName, null);
+		return (this.getOrganization(orgName) == null);
+	}
+
+	@Override
+	public boolean addOrganization(Organization org) {
+		this.getDatabase().set(org.getName(), org);
+		return (this.getOrganization(org.getName()) != null);
 	}
 }
