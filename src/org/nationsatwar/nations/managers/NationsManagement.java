@@ -1,11 +1,11 @@
 package org.nationsatwar.nations.managers;
 
-import org.bukkit.plugin.PluginBase;
+import org.nationsatwar.nations.Nations;
 
 public abstract class NationsManagement {
-	protected PluginBase plugin;
+	protected Nations plugin;
 	
-	protected NationsManagement(PluginBase plugin) {
+	protected NationsManagement(Nations plugin) {
 		this.plugin = plugin;
 	}
 	

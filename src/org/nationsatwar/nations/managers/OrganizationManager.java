@@ -1,20 +1,27 @@
 package org.nationsatwar.nations.managers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import org.bukkit.plugin.PluginBase;
 import org.nationsatwar.nations.Nations;
+import org.nationsatwar.nations.events.NationsDestroyEvent;
+import org.nationsatwar.nations.events.NationsDestroyEvent.NationsDestroyEventType;
 import org.nationsatwar.nations.objects.Nation;
 import org.nationsatwar.nations.objects.NationsObject;
+import org.nationsatwar.nations.objects.Organization;
 import org.nationsatwar.nations.objects.Plot;
 import org.nationsatwar.nations.objects.Town;
 
-public class TownManager extends NationsManagement {
+public class OrganizationManager extends NationsManagement {
+	private ArrayList<Organization> orgs;
+	
+	
 	private HashMap<Integer, Town> townMap = new HashMap<Integer, Town>();
 
-	public TownManager(PluginBase plugin) {
+	public OrganizationManager(PluginBase plugin) {
 		super(plugin);
 	}
 	
@@ -144,5 +151,29 @@ public class TownManager extends NationsManagement {
 			}
 		}
 		return false;
+	}
+
+	public Organization getOrganization(String org) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean addMember(String org, String member) {
+		return this.getOrganization(org).addMember(member);
+	}
+
+	public boolean removeMember(String memberOrg, String member) {
+		Organization org = this.getOrganization(memberOrg);
+		if(org.removeMember(member)) {
+			if(org.getMembers().isEmpty()) {
+				NationsDestroyEvent event = new NationsDestroyEvent(member, org.getName(), NationsDestroyEventType.EMPTY, TODO: ORGLEVEL);
+				plugin.getServer().getPluginManager().callEvent(event);
+			}
+		}
+	}
+
+	public void removeOrg(String org, String member, NationsDestroyEventType nationsDestroyEventType) {
+		// TODO Auto-generated method stub
+		
 	}
 }

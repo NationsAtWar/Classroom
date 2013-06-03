@@ -2,27 +2,19 @@ package org.nationsatwar.nations.objects;
 
 import org.bukkit.Location;
 
-public class Plot extends NationsObject {
-	public String world;
-	public int x = -1;
-	public int z = -1;
-	private String locationDescription;
-	private int town;
+public class Plot {
+	private int id;
+	private String world;
+	private int x;
+	private int z;
+	private String description;
 	
-	public Plot() {
-		super(-1);
-	}
-	
-	public Plot(int newId, Location location, Nation nation, Town town) {
-		super(newId);
+	public Plot(int newId, Location location) {
+		this.id = newId;
 		if(location != null) {
 			this.x = location.getChunk().getX();
 			this.z = location.getChunk().getZ();
 			this.world = location.getWorld().getName();
-		}
-		if(nation != null || town != null) {
-			this.locationDescription = nation.getName()+";"+town.getName();
-			this.setTownID(town.getID());
 		}
 	}
 
@@ -41,26 +33,13 @@ public class Plot extends NationsObject {
 	public String getWorld() {
 		return world;
 	}
+	
+	public int getId() {
+		return this.id;
+	}
 
 	public String getLocationDescription() {
-		String nation = "";
-		String town = "";
-		
-		String[] description = this.locationDescription.split(";");
-		if(description.length > 1) {
-			nation = description[0];
-			town = description[1];
-			return "Nation: "+nation+" Town: "+town;
-		}
-		return this.locationDescription;
-	}
-
-	public int getTownID() {
-		return town;
-	}
-
-	public void setTownID(int town) {
-		this.town = town;
+		return this.description;
 	}
 
 }
