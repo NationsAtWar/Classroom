@@ -16,10 +16,10 @@ public class NationsMemberEventListener implements Listener {
 	public void onNationsMemberEvent(NationsMemberEvent event) {
 		switch(event.getType()) {
 		case ADD:
-			plugin.orgManager.addMember(event.getOrg(), event.getMember());
+			plugin.getOrgManager(event.getOrgType()).addMember(event.getOrgName(), event.getPlayer());
 			break;
 		case REMOVE:
-			plugin.orgManager.removeMember(event.getOrg(), event.getMember());
+			plugin.getOrgManager(event.getOrgType()).removeMember(event.getOrgName(), event.getPlayer());
 			break;
 		default:
 			break;

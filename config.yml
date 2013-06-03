@@ -1,14 +1,10 @@
-currency: false
-balancing: nation
-balancingpercent: 10;
-reloadhours: 6
-inviteaging: 28
-blockpearls: true
-datasource:
-    use_mysql: true
-    mysql:
-        db_name: nationsatwar
-        user: 
-        pass: 
-        url: localhost
-        port: 3306
+datasource: file
+organizations:
+  Town:
+    level: 5
+    hasplots: true
+  Nation:
+  	level: 6
+  Alliance:
+    level: 7
+    removeEmpty: false

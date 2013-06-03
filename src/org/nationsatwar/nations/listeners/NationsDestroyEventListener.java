@@ -16,7 +16,7 @@ public class NationsDestroyEventListener implements Listener {
 	public void onNationsDestroyEvent(NationsDestroyEvent event) {
 		switch(event.getType()) {
 		case EMPTY:
-			plugin.orgManager.removeOrg(event.getOrg(), event.getMember(), event.getType());
+			plugin.getOrgManager(event.getOrgType()).removeOrg(event.getOrgName(), event.getType());
 			break;
 		default:
 			break;

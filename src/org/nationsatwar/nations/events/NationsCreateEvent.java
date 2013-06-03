@@ -5,32 +5,32 @@ import org.bukkit.event.HandlerList;
 
 public class NationsCreateEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
-	private String member;
-	private String org;
+	private String player;
+	private String orgName;
+	private String orgType;
 	private NationsCreateEventType type;
-	private int orgLevel;
 	
-	public NationsCreateEvent(String eventMember, String eventOrg, NationsCreateEventType eventType, int eventLevel) {
-		this.member = eventMember;
-		this.org = eventOrg;
+	public NationsCreateEvent(String eventPlayer, String eventOrgName, String eventOrgType, NationsCreateEventType eventType) {
+		this.player = eventPlayer;
+		this.orgName = eventOrgName;
+		this.orgType = eventOrgType;
 		this.type = eventType;
-		this.orgLevel = eventLevel;
 	}
 	
-	public String getMember() {
-		return this.member;
+	public String getPlayer() {
+		return this.player;
 	}
 	
-	public String getOrg() {
-		return this.org;
+	public String getOrgName() {
+		return this.orgName;
+	}
+	
+	public String getOrgType() {
+		return this.orgType;
 	}
 	
 	public NationsCreateEventType getType() {
 		return this.type;
-	}
-	
-	public int getLevel() {
-		return this.orgLevel;
 	}
 
 	@Override
