@@ -1,4 +1,5 @@
-Nations
-=======
+Classroom (Formerly Nations)
+============================
 
-The Nation System - Nations, Towns, and Alliances
+The Grouping System - Nations, Towns, Alliances, and more
+---------------------------------------------------------

@@ -1,4 +1,4 @@
-name: Nations
+name: Classroom
 main: org.nationsatwar.nations.Nations
 version: 0.2
 [depends]: PermissionsBukkit
