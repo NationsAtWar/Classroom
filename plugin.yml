@@ -1,6 +1,6 @@
 name: Classroom
 main: org.nationsatwar.nations.Nations
-version: 0.2
+version: 0.0.3
 [depends]: PermissionsBukkit
 
 commands:
