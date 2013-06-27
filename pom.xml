@@ -17,6 +17,13 @@
 	</dependency>
   </dependencies>
   <build>
+    <resources>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>false</filtering>
+        <directory>${basedir}/resources</directory>
+      </resource>
+    </resources>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
@@ -30,3 +37,5 @@
     </plugins>
   </build>
 </project>
+<build>
+</build>
