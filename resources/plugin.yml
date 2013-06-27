@@ -1,0 +1,51 @@
+name: Classroom
+main: org.nationsatwar.nations.Nations
+version: 0.0.3
+[depends]: PermissionsBukkit
+
+commands:
+  found:
+    description: Creates a nation.
+    usage: /found
+    permission: nationsatwar.nations.player
+  leave:
+    description: Leaves a nation.
+    usage: /leave
+    permission: nationsatwar.nations.player
+  world:
+    description: Shows information about the world.
+    usage: /world
+    permission: nationsatwar.nations.player
+  invite:
+    description: Creates invitations.
+    usage: /invite [player]
+    permission: nationsatwar.nations.player
+  accept:
+    description: Accepts invitations.
+    usage: /accept [player]
+    permission: nationsatwar.nations.player
+  claim:
+    description: Claims land for your nation.
+    usage: /claim
+    permission: nationsatwar.nations.player
+  raze:
+    description: Razes a plot of land.
+    usage: /raze
+    permission: nationsatwar.nations.player
+  nation:
+    description: Nation manipulation commands
+    usage: /nation
+    permission: nationsatwar.nations.player
+  town:
+    description: Town manipulation commands
+    usage: /town
+    permission: nationsatwar.nations.player
+  nadmin:
+    description: Admin manipulation commands
+    usage: /nadmin
+    permission: nationsatwar.nations.admin
+
+permissions:
+    nationsatwar.nations.player:
+        description: Flags the user as an accepted nations player.
+        default: true
