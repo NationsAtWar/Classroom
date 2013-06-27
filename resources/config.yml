@@ -1,10 +1,10 @@
-datasource: file
+database: file
 organizations:
   Town:
     level: 5
     hasplots: true
   Nation:
-  	level: 6
+    level: 6
   Alliance:
     level: 7
     removeEmpty: false
